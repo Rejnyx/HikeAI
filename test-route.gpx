@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1"
+     creator="Hike AI - https://hikeai.app"
+     xmlns="http://www.topografix.com/GPX/1/1"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+
+  <metadata>
+    <name>Výstup na Lysou horu z Ostravice</name>
+    <desc>Tato trasa vás zavede z malebné Ostravice na vrchol Lysé hory, kde se můžete těšit na úchvatné výhledy na Beskydy. Cestou si užijete krásnou přírodu a možnost obdivovat místní flóru a faunu.</desc>
+    <author>
+      <name>Hike AI</name>
+    </author>
+    <time>2025-10-30T14:09:52.325Z</time>
+  </metadata>
+
+  <trk>
+    <name>Výstup na Lysou horu z Ostravice</name>
+    <desc>Tato trasa vás zavede z malebné Ostravice na vrchol Lysé hory, kde se můžete těšit na úchvatné výhledy na Beskydy. Cestou si užijete krásnou přírodu a možnost obdivovat místní flóru a faunu.</desc>
+    <trkseg>
+      <trkpt lat="49.5351" lon="18.39165">
+        <ele>500</ele>
+      </trkpt>
+      <trkpt lat="49.535643" lon="18.394434">
+        <ele>563</ele>
+      </trkpt>
+      <trkpt lat="49.536187" lon="18.397218">
+        <ele>624</ele>
+      </trkpt>
+      <trkpt lat="49.53673" lon="18.400002">
+        <ele>682</ele>
+      </trkpt>
+      <trkpt lat="49.537274" lon="18.402786">
+        <ele>735</ele>
+      </trkpt>
+      <trkpt lat="49.537818" lon="18.40557">
+        <ele>783</ele>
+      </trkpt>
+      <trkpt lat="49.538361" lon="18.408354">
+        <ele>824</ele>
+      </trkpt>
+      <trkpt lat="49.538905" lon="18.411138">
+        <ele>856</ele>
+      </trkpt>
+      <trkpt lat="49.539448" lon="18.413922">
+        <ele>880</ele>
+      </trkpt>
+      <trkpt lat="49.539991" lon="18.416706">
+        <ele>895</ele>
+      </trkpt>
+      <trkpt lat="49.540535" lon="18.41949">
+        <ele>900</ele>
+      </trkpt>
+      <trkpt lat="49.541078" lon="18.422274">
+        <ele>895</ele>
+      </trkpt>
+      <trkpt lat="49.541622" lon="18.425058">
+        <ele>880</ele>
+      </trkpt>
+      <trkpt lat="49.542165" lon="18.427842">
+        <ele>856</ele>
+      </trkpt>
+      <trkpt lat="49.542709" lon="18.430626">
+        <ele>824</ele>
+      </trkpt>
+      <trkpt lat="49.543252" lon="18.43341">
+        <ele>783</ele>
+      </trkpt>
+      <trkpt lat="49.543796" lon="18.436194">
+        <ele>735</ele>
+      </trkpt>
+      <trkpt lat="49.544339" lon="18.438978">
+        <ele>682</ele>
+      </trkpt>
+      <trkpt lat="49.544883" lon="18.441762">
+        <ele>624</ele>
+      </trkpt>
+      <trkpt lat="49.545426" lon="18.444546">
+        <ele>563</ele>
+      </trkpt>
+      <trkpt lat="49.54597" lon="18.44733">
+        <ele>500</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+
+</gpx>

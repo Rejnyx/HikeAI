@@ -1,0 +1,46 @@
+{
+  "name": "hike-ai-backend",
+  "version": "1.0.0",
+  "description": "Backend API server for Hike AI - AI-powered hiking route generator",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "hiking",
+    "ai",
+    "routes",
+    "gps",
+    "gpx"
+  ],
+  "author": "David",
+  "license": "MIT",
+  "dependencies": {
+    "@mapbox/togeojson": "^0.16.2",
+    "@supabase/supabase-js": "^2.39.0",
+    "@turf/turf": "^6.5.0",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "openai": "^4.20.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.6",
+    "msw": "^2.11.6",
+    "nodemon": "^3.0.2",
+    "supertest": "^7.1.4",
+    "vitest": "^4.0.6"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

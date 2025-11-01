@@ -1,0 +1,44 @@
+# Assets Placeholder
+
+Tato složka by měla obsahovat následující soubory:
+
+## Required Assets
+
+1. **icon.png** (1024x1024)
+   - App ikona pro iOS/Android
+   - Jednoduchá ikona - např. hora nebo hiking boot
+
+2. **splash.png** (1242x2436)
+   - Splash screen při spuštění app
+   - Bílé pozadí s logem uprostřed
+
+3. **adaptive-icon.png** (1024x1024)
+   - Android adaptive icon
+   - Logo by mělo být ve středu, avoid corners
+
+4. **favicon.png** (48x48)
+   - Web favicon (pokud budeš chtít web verzi)
+
+## Jak vytvořit ikony
+
+### Option A: Online Generator
+1. Jdi na https://www.appicon.co/
+2. Upload svůj design (1024x1024)
+3. Vygeneruje všechny potřebné velikosti
+
+### Option B: Figma/Photoshop
+1. Vytvoř 1024x1024 canvas
+2. Design jednoduchou ikonu
+3. Export jako PNG
+
+### Option C: Použij Emoji (Quick MVP)
+1. Jdi na https://favicon.io/emoji-favicons/
+2. Vyber 🥾 nebo 🏔️
+3. Download a přejmenuj na icon.png
+
+## Temporary Workaround
+
+Expo může běžet i bez těchto souborů, ale zobrazí warning.
+Pro rychlý start můžeš použít default Expo ikony.
+
+Až budeš mít ikony ready, nahraď tento soubor skutečnými PNG soubory.

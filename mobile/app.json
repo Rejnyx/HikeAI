@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "Hike AI",
+    "slug": "hike-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hikeai.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Hike AI potřebuje tvou lokaci pro plánování tras.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Hike AI potřebuje tvou lokaci pro sledování tras během túr."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.hikeai.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": ""
+        }
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Hike AI to use your location for route planning and tracking."
+        }
+      ]
+    ]
+  }
+}

@@ -1,0 +1,513 @@
+
+> hike-ai-backend@1.0.0 test:coverage
+> vitest run --coverage
+
+
+[1m[46m RUN [49m[22m [36mv4.0.6 [39m[90mC:/Users/david/Desktop/APPs/HikeAI/backend[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+[90mstdout[2m | tests/unit/geocoding.test.js
+[22m[39m🧪 Vitest Setup Complete
+   Base URL: /
+   API URL: //api/v1
+
+[90mstdout[2m | tests/unit/region-detection.test.js
+[22m[39m🧪 Vitest Setup Complete
+   Base URL: /
+   API URL: //api/v1
+
+[90mstdout[2m | tests/integration/route-generation.test.js
+[22m[39m🧪 Vitest Setup Complete
+   Base URL: /
+   API URL: //api/v1
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould return coordinates for valid location
+[22m[39m🔍 Cache lookup: "Radhošť" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak","elevation":1129}
+💾 Cache hit: Radhošť
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould return null for non-existent location
+[22m[39m🔍 Cache lookup: "NonExistentPlace123" -> key: "nonexistentplace123"
+❌ Cache miss: "nonexistentplace123" not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+[90mstderr[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould return null for non-existent location
+[22m[39m⚠️  No results found for: NonExistentPlace123
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould return multiple results when limit > 1
+[22m[39m🔍 Cache lookup: "Ovčárna" -> key: "ovčárna"
+✅ Cache found: "ovčárna" -> {"lat":50.07777,"lng":17.26027,"name":"Ovčárna","type":"chalet"}
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould use cache for repeated queries (limit=1)
+[22m[39m🔍 Cache lookup: "Kriváň" -> key: "kriváň"
+❌ Cache miss: "kriváň" not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould use cache for repeated queries (limit=1)
+[22m[39m🔍 Cache lookup: "Kriváň" -> key: "kriváň"
+✅ Cache found: "kriváň" -> {"lat":49.16,"lng":19.99,"name":"Kriváň","type":"peak","description":"Kriváň, Slovakia","confidence"
+💾 Cache hit: Kriváň
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould NOT use cache when limit > 1
+[22m[39m🔍 Cache lookup: "Klínovec" -> key: "klínovec"
+❌ Cache miss: "klínovec" not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould NOT use cache when limit > 1
+[22m[39m🔍 Cache lookup: "Klínovec" -> key: "klínovec"
+✅ Cache found: "klínovec" -> {"lat":50.39,"lng":12.96,"name":"Klínovec","type":"peak","description":"Klínovec, Krušné hory","conf
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould handle API timeout gracefully
+[22m[39m🔍 Cache lookup: "SomePlace" -> key: "someplace"
+❌ Cache miss: "someplace" not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+[90mstderr[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Service[2m > [22m[2mgeocode()[2m > [22m[2mshould handle API timeout gracefully
+[22m[39m❌ Geocoding failed for "SomePlace": Timeout
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Cache[2m > [22m[2mshould store and retrieve cached location
+[22m[39m🔍 Cache lookup: "Radhošť" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak"}
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Cache[2m > [22m[2mshould be case-insensitive
+[22m[39m🔍 Cache lookup: "radhošť" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak"}
+🔍 Cache lookup: "RADHOŠŤ" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak"}
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Cache[2m > [22m[2mshould return null for non-cached location
+[22m[39m🔍 Cache lookup: "NonExistent" -> key: "nonexistent"
+❌ Cache miss: "nonexistent" not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+[90mstdout[2m | tests/unit/geocoding.test.js[2m > [22m[2mGeocoding Cache[2m > [22m[2mshould handle cache expiration (TTL)
+[22m[39m🔍 Cache lookup: "Radhošť" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak"}
+
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mgeocode()[2m > [22mshould return coordinates for valid location[32m 2[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mgeocode()[2m > [22mshould return null for non-existent location[32m 1[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mgeocode()[2m > [22mshould return multiple results when limit > 1[32m 1[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mgeocode()[2m > [22mshould use cache for repeated queries (limit=1)[32m 1[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mgeocode()[2m > [22mshould NOT use cache when limit > 1[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mgeocode()[2m > [22mshould handle API timeout gracefully[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mcalculateDistance()[2m > [22mshould calculate correct distance between two points[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mcalculateDistance()[2m > [22mshould return 0 for same coordinates[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Service[2m > [22mcalculateDistance()[2m > [22mshould calculate long distances correctly[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Cache[2m > [22mshould store and retrieve cached location[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Cache[2m > [22mshould be case-insensitive[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Cache[2m > [22mshould return null for non-cached location[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/geocoding.test.js[2m > [22mGeocoding Cache[2m > [22mshould handle cache expiration (TTL)[32m 0[2mms[22m[39m
+[90mstdout[2m | tests/unit/region-detection.test.js[2m > [22m[2mRegion Detection[2m > [22m[2mgeocodeWithRegionContext()[2m > [22m[2mshould filter results by region when multiple results exist
+[22m[39m   🔍 Found 2 results for "Ovčárna", filtering by region Beskydy
+   ✓ Selected: Ovčárna (7.2km from region center)
+
+[90mstdout[2m | tests/unit/region-detection.test.js[2m > [22m[2mRegion Detection[2m > [22m[2mgeocodeWithRegionContext()[2m > [22m[2mshould fallback to closest match when no results within radius
+[22m[39m   🔍 Found 2 results for "Praha", filtering by region Beskydy
+   ✓ Selected: Ostrava (37.0km from region center)
+
+[90mstderr[2m | tests/unit/region-detection.test.js[2m > [22m[2mRegion Detection[2m > [22m[2mgeocodeWithRegionContext()[2m > [22m[2mshould handle geocoding errors gracefully
+[22m[39m❌ Region-aware geocoding failed: API Error
+
+[90mstdout[2m | tests/unit/region-detection.test.js[2m > [22m[2mRegion Detection[2m > [22m[2mRegion-aware geocoding integration[2m > [22m[2mshould prefer Jeseníky Ovčárna over Benešov Ovčárna when region is Jeseníky
+[22m[39m   🔍 Found 2 results for "Ovčárna", filtering by region Jeseníky
+   ✓ Selected: Ovčárna (5.0km from region center)
+
+[90mstdout[2m | tests/unit/region-detection.test.js[2m > [22m[2mRegion Detection[2m > [22m[2mRegion-aware geocoding integration[2m > [22m[2mshould handle single-word prompts with region context
+[22m[39m   🔍 Found 1 results for "Pustevny", filtering by region Beskydy
+   ✓ Selected: Pustevny (12.2km from region center)
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m
+🚀 Starting route generation...
+📝 Prompt: "Okružní trasa na Praděd z Ovčárny"
+
+1️⃣  Extracting route requirements...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m✅ Entities: {
+  "startLocation": "Ovčárna",
+  "endLocation": "Ovčárna",
+  "mustVisit": [
+    "Praděd"
+  ],
+  "isRoundTrip": true,
+  "distancePreference": "medium",
+  "difficulty": "moderate",
+  "_tokensUsed": 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Praděd
+🔍 Cache lookup: "Praděd" -> key: "praděd"
+✅ Cache found: "praděd" -> {"lat":50.08303,"lng":17.23158,"name":"Praděd","type":"peak","elevation":1491}
+💾 Cache hit: Praděd
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m✅ Detected region: Jeseníky
+🔍 Cache lookup: "Ovčárna" -> key: "ovčárna"
+✅ Cache found: "ovčárna" -> {"lat":50.07777,"lng":17.26027,"name":"Ovčárna","type":"chalet"}
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m   🔍 Found 1 results for "Ovčárna", filtering by region Jeseníky
+   ✓ Selected: Ovčárna (5.0km from region center)
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39mℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Ovčárna (50.07777, 17.26027)
+✅ End: Ovčárna (50.07777, 17.26027)
+⏱️  Geocoding: 1ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+   Processing 1 must-visit locations...
+🔍 Cache lookup: "Praděd" -> key: "praděd"
+✅ Cache found: "praděd" -> {"lat":50.08303,"lng":17.23158,"name":"Praděd","type":"peak","elevation":1491}
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m   🔍 Found 1 results for "Praděd", filtering by region Jeseníky
+   ✓ Selected: Praděd (2.9km from region center)
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m   ✓ Added waypoint: Praděd
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 1ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m✅ Route saved with ID: test-route-123
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m
+🎉 Route generation complete!
+⏱️  Total: 2ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 1ms
+   - Routing+AI: 1ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #1: Praděd okruh should generate ~15km route, not 160km
+[22m[39m✓ Praděd okruh distance: 7.6km
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39m
+🚀 Starting route generation...
+📝 Prompt: "Trasa na Sněžku"
+
+1️⃣  Extracting route requirements...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39m✅ Entities: {
+  "startLocation": "Sněžka",
+  "endLocation": "Sněžka",
+  "mustVisit": [],
+  "isRoundTrip": true,
+  "distancePreference": "medium",
+  "difficulty": "moderate",
+  "_tokensUsed": 150
+}
+⏱️  Extraction: 1ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Sněžka
+🔍 Cache lookup: "Sněžka" -> key: "sněžka"
+✅ Cache found: "sněžka" -> {"lat":50.73603,"lng":15.73978,"name":"Sněžka","type":"peak","elevation":1603}
+💾 Cache hit: Sněžka
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39m✅ Detected region: Krkonoše
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39mℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Sněžka (50.73603, 15.73978)
+✅ End: Sněžka (50.73603, 15.73978)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39m✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39m✅ Route saved with ID: test-route-123
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39m
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 1ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha
+[22m[39m✓ Sněžka distance: 7.6km
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m
+🚀 Starting route generation...
+📝 Prompt: "Round trip z Pusteven na Radhošť"
+
+1️⃣  Extracting route requirements...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m✅ Entities: {
+  "startLocation": "Pustevny",
+  "endLocation": "Pustevny",
+  "mustVisit": [
+    "Radhošť"
+  ],
+  "isRoundTrip": true,
+  "distancePreference": "medium",
+  "difficulty": "moderate",
+  "_tokensUsed": 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Radhošť
+🔍 Cache lookup: "Radhošť" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak","elevation":1129}
+💾 Cache hit: Radhošť
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m✅ Detected region: Beskydy
+🔍 Cache lookup: "Pustevny" -> key: "pustevny"
+✅ Cache found: "pustevny" -> {"lat":49.48333,"lng":18.23333,"name":"Pustevny","type":"chalet"}
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m   🔍 Found 1 results for "Pustevny", filtering by region Beskydy
+   ✓ Selected: Pustevny (12.2km from region center)
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39mℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Pustevny (49.48333, 18.23333)
+✅ End: Pustevny (49.48333, 18.23333)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+   Processing 1 must-visit locations...
+🔍 Cache lookup: "Radhošť" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak","elevation":1129}
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m   🔍 Found 1 results for "Radhošť", filtering by region Beskydy
+   ✓ Selected: Radhošť (13.5km from region center)
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m   ✓ Added waypoint: Radhošť
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m✅ Route saved with ID: test-route-123
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m
+🎉 Route generation complete!
+⏱️  Total: 0ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mCritical Bug Fixes[2m > [22m[2mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km
+[22m[39m✓ Pustevny-Radhošť distance: 7.6km
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould generate valid route for simple prompt
+[22m[39m
+🚀 Starting route generation...
+📝 Prompt: "Pustevny"
+
+1️⃣  Extracting route requirements...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould generate valid route for simple prompt
+[22m[39m✅ Entities: {
+  "startLocation": "Pustevny",
+  "endLocation": "Pustevny",
+  "mustVisit": [],
+  "isRoundTrip": true,
+  "distancePreference": "short",
+  "difficulty": "easy",
+  "_tokensUsed": 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Pustevny
+🔍 Cache lookup: "Pustevny" -> key: "pustevny"
+✅ Cache found: "pustevny" -> {"lat":49.48333,"lng":18.23333,"name":"Pustevny","type":"chalet"}
+💾 Cache hit: Pustevny
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould generate valid route for simple prompt
+[22m[39m✅ Detected region: Beskydy
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould generate valid route for simple prompt
+[22m[39mℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Pustevny (49.48333, 18.23333)
+✅ End: Pustevny (49.48333, 18.23333)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould generate valid route for simple prompt
+[22m[39m✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould generate valid route for simple prompt
+[22m[39m✅ Route saved with ID: test-route-123
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould generate valid route for simple prompt
+[22m[39m
+🎉 Route generation complete!
+⏱️  Total: 0ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould include route metadata
+[22m[39m
+🚀 Starting route generation...
+📝 Prompt: "Radhošť"
+
+1️⃣  Extracting route requirements...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould include route metadata
+[22m[39m✅ Entities: {
+  "startLocation": "Radhošť",
+  "endLocation": "Radhošť",
+  "mustVisit": [],
+  "isRoundTrip": true,
+  "distancePreference": "medium",
+  "difficulty": "moderate",
+  "_tokensUsed": 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Radhošť
+🔍 Cache lookup: "Radhošť" -> key: "radhošť"
+✅ Cache found: "radhošť" -> {"lat":49.48889,"lng":18.21389,"name":"Radhošť","type":"peak","elevation":1129}
+💾 Cache hit: Radhošť
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould include route metadata
+[22m[39m✅ Detected region: Beskydy
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould include route metadata
+[22m[39mℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Radhošť (49.48889, 18.21389)
+✅ End: Radhošť (49.48889, 18.21389)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould include route metadata
+[22m[39m✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 1ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould include route metadata
+[22m[39m✅ Route saved with ID: test-route-123
+
+[90mstdout[2m | tests/integration/route-generation.test.js[2m > [22m[2mRoute Generation Integration Tests[2m > [22m[2mBasic Route Generation[2m > [22m[2mshould include route metadata
+[22m[39m
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 1ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mdetectRegion()[2m > [22mshould detect Beskydy region correctly[32m 2[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mdetectRegion()[2m > [22mshould detect Jeseníky region correctly[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mdetectRegion()[2m > [22mshould detect Krkonoše region correctly[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mdetectRegion()[2m > [22mshould detect Šumava region correctly[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mdetectRegion()[2m > [22mshould return null for coordinates outside known regions[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mdetectRegion()[2m > [22mshould handle boundary cases - edge of Beskydy region[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mdetectRegion()[2m > [22mshould return null for coordinates just outside region boundaries[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mgeocodeWithRegionContext()[2m > [22mshould call normal geocode when no region provided[32m 1[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mgeocodeWithRegionContext()[2m > [22mshould filter results by region when multiple results exist[32m 1[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mgeocodeWithRegionContext()[2m > [22mshould return single result when only one match exists[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mgeocodeWithRegionContext()[2m > [22mshould fallback to closest match when no results within radius[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mgeocodeWithRegionContext()[2m > [22mshould handle geocoding errors gracefully[32m 1[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mRegion-aware geocoding integration[2m > [22mshould prefer Jeseníky Ovčárna over Benešov Ovčárna when region is Jeseníky[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/region-detection.test.js[2m > [22mRegion Detection[2m > [22mRegion-aware geocoding integration[2m > [22mshould handle single-word prompts with region context[32m 0[2mms[22m[39m
+ [32m✓[39m tests/integration/route-generation.test.js[2m > [22mRoute Generation Integration Tests[2m > [22mCritical Bug Fixes[2m > [22mBUG #1: Praděd okruh should generate ~15km route, not 160km[32m 5[2mms[22m[39m
+ [32m✓[39m tests/integration/route-generation.test.js[2m > [22mRoute Generation Integration Tests[2m > [22mCritical Bug Fixes[2m > [22mBUG #2: Sněžka should generate round trip from Sněžka, not from Praha[32m 1[2mms[22m[39m
+ [32m✓[39m tests/integration/route-generation.test.js[2m > [22mRoute Generation Integration Tests[2m > [22mCritical Bug Fixes[2m > [22mBUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km[32m 1[2mms[22m[39m
+ [32m✓[39m tests/integration/route-generation.test.js[2m > [22mRoute Generation Integration Tests[2m > [22mBasic Route Generation[2m > [22mshould generate valid route for simple prompt[32m 1[2mms[22m[39m
+ [32m✓[39m tests/integration/route-generation.test.js[2m > [22mRoute Generation Integration Tests[2m > [22mBasic Route Generation[2m > [22mshould include route metadata[32m 1[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m32 passed[39m[22m[90m (32)[39m
+[2m   Start at [22m 21:02:53
+[2m   Duration [22m 658ms[2m (transform 317ms, setup 90ms, collect 784ms, tests 28ms, environment 0ms, prepare 65ms)[22m
+
+JUNIT report written to C:/Users/david/Desktop/APPs/HikeAI/backend/test-results/junit.xml
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   40.27 |    40.65 |   36.53 |   41.46 |                   
+ services          |   45.89 |    47.43 |   44.18 |   47.11 |                   
+  geocoding.js     |   74.35 |       70 |      60 |   73.68 | 82-116            
+  ...odingCache.js |   83.33 |       75 |   83.33 |   83.33 | 43-45,61          
+  mapyczRouting.js |    2.58 |        0 |       0 |    2.75 | 17-294            
+  ...eGenerator.js |    74.5 |    67.74 |   84.61 |   74.62 | ...30-547,621-622 
+  supabase.js      |    4.41 |     9.37 |       0 |    4.91 | 8,29-211          
+ utils             |       0 |        0 |       0 |       0 |                   
+  gpx.js           |       0 |        0 |       0 |       0 | 14-231            
+-------------------|---------|----------|---------|---------|-------------------

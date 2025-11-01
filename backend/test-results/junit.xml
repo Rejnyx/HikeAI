@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="121" failures="0" errors="0" time="0.2979752">
+    <testsuite name="tests/e2e/health-api.test.js" timestamp="2025-11-01T20:45:58.428Z" hostname="Rejnyx_x" tests="3" failures="0" errors="0" skipped="0" time="0.0355763">
+        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 200 with healthy status when database is connected" time="0.0260003">
+        </testcase>
+        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 200 with degraded status when database connection fails" time="0.0041714">
+        </testcase>
+        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 503 when database throws error" time="0.0034164">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/e2e/places-api.test.js" timestamp="2025-11-01T20:45:58.430Z" hostname="Rejnyx_x" tests="20" failures="0" errors="0" skipped="0" time="0.1002081">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return autocomplete suggestions successfully" time="0.0318377">
+            <system-out>
+🔍 Suggest request: &quot;Lysá ho&quot;
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return 400 if query is too short" time="0.0043497">
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return 400 if query is missing" time="0.0030752">
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should handle API errors gracefully" time="0.0036998">
+            <system-out>
+🔍 Suggest request: &quot;Test&quot;
+
+            </system-out>
+            <system-err>
+❌ Suggest error: Mapy.cz API error
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return empty array if no results" time="0.0040583">
+            <system-out>
+🔍 Suggest request: &quot;NonexistentPlace123&quot;
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return place details by query" time="0.0056543">
+            <system-out>
+📍 Place detail request: Praděd
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return place details by coordinates (reverse geocoding)" time="0.0033292">
+            <system-out>
+📍 Place detail request: 50.73603,15.73978
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return 400 if neither query nor coordinates provided" time="0.0030072">
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return 404 if place not found" time="0.0035056">
+            <system-out>
+📍 Place detail request: NonexistentPlace123
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should handle API errors gracefully" time="0.0034217">
+            <system-out>
+📍 Place detail request: Test
+
+            </system-out>
+            <system-err>
+❌ Place detail error: Geocoding API error
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return Wikipedia description successfully" time="0.0038108">
+            <system-out>
+📝 Description request for: Praděd (1491 m)
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 400 if name is missing" time="0.0028166">
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 404 for disambiguation pages" time="0.0032804">
+            <system-out>
+📝 Description request for: Hora
+
+⚠️  Skipping disambiguation page for: Hora
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 404 if no description found" time="0.0029423">
+            <system-out>
+📝 Description request for: NonexistentPlace123
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should handle Wikipedia API errors" time="0.0032646">
+            <system-out>
+📝 Description request for: Test
+
+            </system-out>
+            <system-err>
+❌ Description fetch error: Wikipedia API error
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Wikipedia" time="0.0033065">
+            <system-out>
+📷 Photo request for: Praděd (1491 m)
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Wikimedia Commons if Wikipedia fails" time="0.0031349">
+            <system-out>
+📷 Photo request for: Sněžka
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Unsplash if other sources fail" time="0.0033924">
+            <system-out>
+📷 Photo request for: Lysá hora
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return 400 if name is missing" time="0.0027784">
+        </testcase>
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return 404 if no photo found from any source" time="0.0032853">
+            <system-out>
+📷 Photo request for: NonexistentPlace123
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/e2e/routes-api.test.js" timestamp="2025-11-01T20:45:58.438Z" hostname="Rejnyx_x" tests="10" failures="0" errors="0" skipped="0" time="0.0765467">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should generate a new route successfully" time="0.0369525">
+            <system-out>
+
+🌟 New route generation request: &quot;Okružní trasa na Radhošť z Pusteven&quot;
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should return 400 if prompt is missing" time="0.0046294">
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should return 500 if route generation fails" time="0.0036334">
+            <system-out>
+
+🌟 New route generation request: &quot;Invalid location&quot;
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should return list of routes with default pagination" time="0.004995">
+            <system-out>
+📋 Fetching routes: limit=20, offset=0
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should support custom pagination parameters" time="0.0063182">
+            <system-out>
+📋 Fetching routes: limit=1, offset=2
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should return 500 if database query fails" time="0.0037465">
+            <system-out>
+📋 Fetching routes: limit=20, offset=0
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id &gt; should return route details by ID" time="0.0035649">
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id &gt; should return 404 if route not found" time="0.0032063">
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id/gpx &gt; should download GPX file for a route" time="0.0037094">
+        </testcase>
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id/gpx &gt; should return 404 if route or GPX data not found" time="0.0035889">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/integration/route-generation.test.js" timestamp="2025-11-01T20:45:58.441Z" hostname="Rejnyx_x" tests="5" failures="0" errors="0" skipped="0" time="0.0112665">
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #1: Praděd okruh should generate ~15km route, not 160km" time="0.0049571">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Okružní trasa na Praděd z Ovčárny&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Ovčárna&quot;,
+  &quot;endLocation&quot;: &quot;Ovčárna&quot;,
+  &quot;mustVisit&quot;: [
+    &quot;Praděd&quot;
+  ],
+  &quot;isRoundTrip&quot;: true,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 1ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Praděd
+🔍 Cache lookup: &quot;Praděd&quot; -&gt; key: &quot;praděd&quot;
+✅ Cache found: &quot;praděd&quot; -&gt; {&quot;lat&quot;:50.08303,&quot;lng&quot;:17.23158,&quot;name&quot;:&quot;Praděd&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1491}
+💾 Cache hit: Praděd
+
+✅ Detected region: Jeseníky
+🔍 Cache lookup: &quot;Ovčárna&quot; -&gt; key: &quot;ovčárna&quot;
+✅ Cache found: &quot;ovčárna&quot; -&gt; {&quot;lat&quot;:50.07777,&quot;lng&quot;:17.26027,&quot;name&quot;:&quot;Ovčárna&quot;,&quot;type&quot;:&quot;chalet&quot;}
+
+   🔍 Found 1 results for &quot;Ovčárna&quot;, filtering by region Jeseníky
+   ✓ Selected: Ovčárna (5.0km from region center)
+
+ℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Ovčárna (50.07777, 17.26027)
+✅ End: Ovčárna (50.07777, 17.26027)
+⏱️  Geocoding: 1ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+   Processing 1 must-visit locations...
+🔍 Cache lookup: &quot;Praděd&quot; -&gt; key: &quot;praděd&quot;
+✅ Cache found: &quot;praděd&quot; -&gt; {&quot;lat&quot;:50.08303,&quot;lng&quot;:17.23158,&quot;name&quot;:&quot;Praděd&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1491}
+
+   🔍 Found 1 results for &quot;Praděd&quot;, filtering by region Jeseníky
+   ✓ Selected: Praděd (2.9km from region center)
+
+   ✓ Added waypoint: Praděd
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 2ms (0.0s)
+   - Extraction: 1ms
+   - Geocoding: 1ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+✓ Praděd okruh distance: 7.6km
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #2: Sněžka should generate round trip from Sněžka, not from Praha" time="0.0013149">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Trasa na Sněžku&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Sněžka&quot;,
+  &quot;endLocation&quot;: &quot;Sněžka&quot;,
+  &quot;mustVisit&quot;: [],
+  &quot;isRoundTrip&quot;: true,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Sněžka
+🔍 Cache lookup: &quot;Sněžka&quot; -&gt; key: &quot;sněžka&quot;
+✅ Cache found: &quot;sněžka&quot; -&gt; {&quot;lat&quot;:50.73603,&quot;lng&quot;:15.73978,&quot;name&quot;:&quot;Sněžka&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1603}
+💾 Cache hit: Sněžka
+
+✅ Detected region: Krkonoše
+
+ℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Sněžka (50.73603, 15.73978)
+✅ End: Sněžka (50.73603, 15.73978)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+✓ Sněžka distance: 7.6km
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km" time="0.001212">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Round trip z Pusteven na Radhošť&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Pustevny&quot;,
+  &quot;endLocation&quot;: &quot;Pustevny&quot;,
+  &quot;mustVisit&quot;: [
+    &quot;Radhošť&quot;
+  ],
+  &quot;isRoundTrip&quot;: true,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Radhošť
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+💾 Cache hit: Radhošť
+
+✅ Detected region: Beskydy
+🔍 Cache lookup: &quot;Pustevny&quot; -&gt; key: &quot;pustevny&quot;
+✅ Cache found: &quot;pustevny&quot; -&gt; {&quot;lat&quot;:49.48333,&quot;lng&quot;:18.23333,&quot;name&quot;:&quot;Pustevny&quot;,&quot;type&quot;:&quot;chalet&quot;}
+
+   🔍 Found 1 results for &quot;Pustevny&quot;, filtering by region Beskydy
+   ✓ Selected: Pustevny (12.2km from region center)
+
+ℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Pustevny (49.48333, 18.23333)
+✅ End: Pustevny (49.48333, 18.23333)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+   Processing 1 must-visit locations...
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+
+   🔍 Found 1 results for &quot;Radhošť&quot;, filtering by region Beskydy
+   ✓ Selected: Radhošť (13.5km from region center)
+
+   ✓ Added waypoint: Radhošť
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+✓ Pustevny-Radhošť distance: 7.6km
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Basic Route Generation &gt; should generate valid route for simple prompt" time="0.0009514">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Pustevny&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Pustevny&quot;,
+  &quot;endLocation&quot;: &quot;Pustevny&quot;,
+  &quot;mustVisit&quot;: [],
+  &quot;isRoundTrip&quot;: true,
+  &quot;distancePreference&quot;: &quot;short&quot;,
+  &quot;difficulty&quot;: &quot;easy&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Pustevny
+🔍 Cache lookup: &quot;Pustevny&quot; -&gt; key: &quot;pustevny&quot;
+✅ Cache found: &quot;pustevny&quot; -&gt; {&quot;lat&quot;:49.48333,&quot;lng&quot;:18.23333,&quot;name&quot;:&quot;Pustevny&quot;,&quot;type&quot;:&quot;chalet&quot;}
+💾 Cache hit: Pustevny
+
+✅ Detected region: Beskydy
+
+ℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Pustevny (49.48333, 18.23333)
+✅ End: Pustevny (49.48333, 18.23333)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 0ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Basic Route Generation &gt; should include route metadata" time="0.0009164">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Radhošť&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Radhošť&quot;,
+  &quot;endLocation&quot;: &quot;Radhošť&quot;,
+  &quot;mustVisit&quot;: [],
+  &quot;isRoundTrip&quot;: true,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Radhošť
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+💾 Cache hit: Radhošť
+
+✅ Detected region: Beskydy
+
+ℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Radhošť (49.48889, 18.21389)
+✅ End: Radhošť (49.48889, 18.21389)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 0ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/integration/supabase.test.js" timestamp="2025-11-01T20:45:58.445Z" hostname="Rejnyx_x" tests="18" failures="0" errors="0" skipped="0" time="0.0154338">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; testConnection() &gt; should return true on successful connection" time="0.0034996">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; testConnection() &gt; should return false on connection error" time="0.0004451">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; insertRoute() &gt; should insert route successfully" time="0.0005298">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; insertRoute() &gt; should handle insert error" time="0.0003882">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getRouteById() &gt; should fetch route by ID successfully" time="0.0005333">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getRouteById() &gt; should handle route not found" time="0.0003412">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should fetch routes with default pagination" time="0.0005118">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should support custom pagination" time="0.0004177">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should apply region filter" time="0.000426">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should handle database error" time="0.0003264">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should search routes near location" time="0.0008974">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should use default radius of 50km" time="0.0016892">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should handle search error" time="0.0003246">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; logGeneration() &gt; should log generation attempt successfully" time="0.0004934">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; logGeneration() &gt; should handle logging error" time="0.0003203">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should calculate generation statistics" time="0.0006077">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should handle empty logs" time="0.0003027">
+        </testcase>
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should handle stats fetch error" time="0.0013435">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/unit/geocoding.test.js" timestamp="2025-11-01T20:45:58.449Z" hostname="Rejnyx_x" tests="13" failures="0" errors="0" skipped="0" time="0.0100584">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return coordinates for valid location" time="0.0028908">
+            <system-out>
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+💾 Cache hit: Radhošť
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return null for non-existent location" time="0.0008697">
+            <system-out>
+🔍 Cache lookup: &quot;NonExistentPlace123&quot; -&gt; key: &quot;nonexistentplace123&quot;
+❌ Cache miss: &quot;nonexistentplace123&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+            </system-out>
+            <system-err>
+⚠️  No results found for: NonExistentPlace123
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return multiple results when limit &gt; 1" time="0.0013387">
+            <system-out>
+🔍 Cache lookup: &quot;Ovčárna&quot; -&gt; key: &quot;ovčárna&quot;
+✅ Cache found: &quot;ovčárna&quot; -&gt; {&quot;lat&quot;:50.07777,&quot;lng&quot;:17.26027,&quot;name&quot;:&quot;Ovčárna&quot;,&quot;type&quot;:&quot;chalet&quot;}
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should use cache for repeated queries (limit=1)" time="0.00077">
+            <system-out>
+🔍 Cache lookup: &quot;Kriváň&quot; -&gt; key: &quot;kriváň&quot;
+❌ Cache miss: &quot;kriváň&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+🔍 Cache lookup: &quot;Kriváň&quot; -&gt; key: &quot;kriváň&quot;
+✅ Cache found: &quot;kriváň&quot; -&gt; {&quot;lat&quot;:49.16,&quot;lng&quot;:19.99,&quot;name&quot;:&quot;Kriváň&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;description&quot;:&quot;Kriváň, Slovakia&quot;,&quot;confidence&quot;
+💾 Cache hit: Kriváň
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should NOT use cache when limit &gt; 1" time="0.0004103">
+            <system-out>
+🔍 Cache lookup: &quot;Klínovec&quot; -&gt; key: &quot;klínovec&quot;
+❌ Cache miss: &quot;klínovec&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+🔍 Cache lookup: &quot;Klínovec&quot; -&gt; key: &quot;klínovec&quot;
+✅ Cache found: &quot;klínovec&quot; -&gt; {&quot;lat&quot;:50.39,&quot;lng&quot;:12.96,&quot;name&quot;:&quot;Klínovec&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;description&quot;:&quot;Klínovec, Krušné hory&quot;,&quot;conf
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should handle API timeout gracefully" time="0.0004582">
+            <system-out>
+🔍 Cache lookup: &quot;SomePlace&quot; -&gt; key: &quot;someplace&quot;
+❌ Cache miss: &quot;someplace&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+            </system-out>
+            <system-err>
+❌ Geocoding failed for &quot;SomePlace&quot;: Timeout
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should calculate correct distance between two points" time="0.0002945">
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should return 0 for same coordinates" time="0.0001058">
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should calculate long distances correctly" time="0.0001805">
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should store and retrieve cached location" time="0.0003722">
+            <system-out>
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;}
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should be case-insensitive" time="0.0003161">
+            <system-out>
+🔍 Cache lookup: &quot;radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;}
+🔍 Cache lookup: &quot;RADHOŠŤ&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;}
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should return null for non-cached location" time="0.0003099">
+            <system-out>
+🔍 Cache lookup: &quot;NonExistent&quot; -&gt; key: &quot;nonexistent&quot;
+❌ Cache miss: &quot;nonexistent&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should handle cache expiration (TTL)" time="0.0002772">
+            <system-out>
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;}
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/unit/gpx.test.js" timestamp="2025-11-01T20:45:58.454Z" hostname="Rejnyx_x" tests="18" failures="0" errors="0" skipped="0" time="0.0081833">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should generate valid GPX XML with basic waypoints" time="0.0025917">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should include metadata in GPX output" time="0.0002751">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should escape XML special characters in metadata" time="0.0002143">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should include POIs as waypoints in GPX" time="0.0002673">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should handle waypoints without elevation data" time="0.0002718">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should use default metadata when not provided" time="0.0001298">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should handle empty POIs array gracefully" time="0.0001362">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate total distance from waypoints" time="0.0003788">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation gain correctly" time="0.0002143">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation loss correctly" time="0.0000974">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation gain and loss separately" time="0.0001273">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should estimate duration using Naismith rule" time="0.0001394">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should return zeros for empty waypoints array" time="0.0001412">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should return zeros for single waypoint" time="0.0001356">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should handle waypoints without elevation data gracefully" time="0.0001504">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should return same waypoints if &lt;= 2 points" time="0.0007465">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should simplify route using Douglas-Peucker algorithm" time="0.0003407">
+        </testcase>
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should keep significant waypoints with low tolerance" time="0.0001296">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/unit/mapyczRouting.test.js" timestamp="2025-11-01T20:45:58.457Z" hostname="Rejnyx_x" tests="13" failures="0" errors="0" skipped="0" time="0.0122844">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should calculate route between two points" time="0.0052031">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle geometry with nested structure" time="0.0004684">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle waypoints with intermediate points" time="0.0006868">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle elevation missing from coordinates" time="0.0003825">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Round trips &gt; should detect and handle round trip" time="0.0008151">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Round trips &gt; should handle multiple waypoints in round trip" time="0.0004356">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on API error" time="0.000691">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on missing geometry" time="0.000337">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on HTTP error" time="0.0003137">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should generate fallback route for round trip" time="0.0003544">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should handle empty waypoints array" time="0.0005033">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should limit waypoints to 15 (Mapy.cz limit)" time="0.0003565">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should handle timeout with fallback" time="0.0002831">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/unit/region-detection.test.js" timestamp="2025-11-01T20:45:58.460Z" hostname="Rejnyx_x" tests="14" failures="0" errors="0" skipped="0" time="0.0088672">
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Beskydy region correctly" time="0.0020665">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Jeseníky region correctly" time="0.0002364">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Krkonoše region correctly" time="0.0001772">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Šumava region correctly" time="0.0001871">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should return null for coordinates outside known regions" time="0.0001138">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should handle boundary cases - edge of Beskydy region" time="0.0001543">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should return null for coordinates just outside region boundaries" time="0.0000904">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should call normal geocode when no region provided" time="0.0013202">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should filter results by region when multiple results exist" time="0.0011129">
+            <system-out>
+   🔍 Found 2 results for &quot;Ovčárna&quot;, filtering by region Beskydy
+   ✓ Selected: Ovčárna (7.2km from region center)
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should return single result when only one match exists" time="0.0001629">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should fallback to closest match when no results within radius" time="0.0003301">
+            <system-out>
+   🔍 Found 2 results for &quot;Praha&quot;, filtering by region Beskydy
+   ✓ Selected: Ostrava (37.0km from region center)
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should handle geocoding errors gracefully" time="0.0006573">
+            <system-err>
+❌ Region-aware geocoding failed: API Error
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; Region-aware geocoding integration &gt; should prefer Jeseníky Ovčárna over Benešov Ovčárna when region is Jeseníky" time="0.0003518">
+            <system-out>
+   🔍 Found 2 results for &quot;Ovčárna&quot;, filtering by region Jeseníky
+   ✓ Selected: Ovčárna (5.0km from region center)
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; Region-aware geocoding integration &gt; should handle single-word prompts with region context" time="0.0003885">
+            <system-out>
+   🔍 Found 1 results for &quot;Pustevny&quot;, filtering by region Beskydy
+   ✓ Selected: Pustevny (12.2km from region center)
+
+            </system-out>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/unit/routeGenerator-edge-cases.test.js" timestamp="2025-11-01T20:45:58.465Z" hostname="Rejnyx_x" tests="7" failures="0" errors="0" skipped="0" time="0.0195505">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Must-visit waypoint same as start/end &gt; should skip must-visit location that is same as start point" time="0.0077205">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Radhošť → Pustevny&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Radhošť&quot;,
+  &quot;endLocation&quot;: &quot;Pustevny&quot;,
+  &quot;mustVisit&quot;: [
+    &quot;Radhošť&quot;
+  ],
+  &quot;isRoundTrip&quot;: false,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Radhošť
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+💾 Cache hit: Radhošť
+
+✅ Detected region: Beskydy
+🔍 Cache lookup: &quot;Pustevny&quot; -&gt; key: &quot;pustevny&quot;
+✅ Cache found: &quot;pustevny&quot; -&gt; {&quot;lat&quot;:49.48333,&quot;lng&quot;:18.23333,&quot;name&quot;:&quot;Pustevny&quot;,&quot;type&quot;:&quot;chalet&quot;}
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+
+   🔍 Found 1 results for &quot;Pustevny&quot;, filtering by region Beskydy
+   ✓ Selected: Pustevny (12.2km from region center)
+   🔍 Found 1 results for &quot;Radhošť&quot;, filtering by region Beskydy
+   ✓ Selected: Radhošť (13.5km from region center)
+
+✅ Start: Radhošť (49.48889, 18.21389)
+✅ End: Pustevny (49.48333, 18.23333)
+⏱️  Geocoding: 1ms
+   Direct distance: 1.5km
+
+4️⃣  Generating route with AI...
+   Processing 1 must-visit locations...
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+
+   🔍 Found 1 results for &quot;Radhošť&quot;, filtering by region Beskydy
+   ✓ Selected: Radhošť (13.5km from region center)
+
+   ⚠️  Skipping Radhošť (same as start/end point)
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 1ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 2ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 1ms
+   - Routing+AI: 1ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Must-visit waypoint same as start/end &gt; should skip must-visit location that is same as end point" time="0.0020281">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Pustevny → Radhošť přes Radhošť&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Pustevny&quot;,
+  &quot;endLocation&quot;: &quot;Radhošť&quot;,
+  &quot;mustVisit&quot;: [
+    &quot;Radhošť&quot;
+  ],
+  &quot;isRoundTrip&quot;: false,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Radhošť
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+💾 Cache hit: Radhošť
+
+✅ Detected region: Beskydy
+🔍 Cache lookup: &quot;Pustevny&quot; -&gt; key: &quot;pustevny&quot;
+✅ Cache found: &quot;pustevny&quot; -&gt; {&quot;lat&quot;:49.48333,&quot;lng&quot;:18.23333,&quot;name&quot;:&quot;Pustevny&quot;,&quot;type&quot;:&quot;chalet&quot;}
+
+   🔍 Found 1 results for &quot;Pustevny&quot;, filtering by region Beskydy
+   ✓ Selected: Pustevny (12.2km from region center)
+
+✅ Start: Pustevny (49.48333, 18.23333)
+✅ End: Radhošť (49.48889, 18.21389)
+⏱️  Geocoding: 1ms
+   Direct distance: 1.5km
+
+4️⃣  Generating route with AI...
+   Processing 1 must-visit locations...
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+
+   🔍 Found 1 results for &quot;Radhošť&quot;, filtering by region Beskydy
+   ✓ Selected: Radhošť (13.5km from region center)
+
+   ⚠️  Skipping Radhošť (same as start/end point)
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 1ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Geocoding errors for must-visit locations &gt; should continue route generation if must-visit location fails to geocode" time="0.0021952">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Okružní trasa z Pusteven na Radhošť přes NonExistentPlace123&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Pustevny&quot;,
+  &quot;endLocation&quot;: &quot;Pustevny&quot;,
+  &quot;mustVisit&quot;: [
+    &quot;Radhošť&quot;,
+    &quot;NonExistentPlace123&quot;
+  ],
+  &quot;isRoundTrip&quot;: true,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Radhošť
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+💾 Cache hit: Radhošť
+
+✅ Detected region: Beskydy
+🔍 Cache lookup: &quot;Pustevny&quot; -&gt; key: &quot;pustevny&quot;
+✅ Cache found: &quot;pustevny&quot; -&gt; {&quot;lat&quot;:49.48333,&quot;lng&quot;:18.23333,&quot;name&quot;:&quot;Pustevny&quot;,&quot;type&quot;:&quot;chalet&quot;}
+
+   🔍 Found 1 results for &quot;Pustevny&quot;, filtering by region Beskydy
+   ✓ Selected: Pustevny (12.2km from region center)
+
+ℹ️  Round trip detected (start == end), using same coordinates
+✅ Start: Pustevny (49.48333, 18.23333)
+✅ End: Pustevny (49.48333, 18.23333)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+   Processing 2 must-visit locations...
+🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
+✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
+
+   🔍 Found 1 results for &quot;Radhošť&quot;, filtering by region Beskydy
+   ✓ Selected: Radhošť (13.5km from region center)
+
+   ✓ Added waypoint: Radhošť
+🔍 Cache lookup: &quot;NonExistentPlace123&quot; -&gt; key: &quot;nonexistentplace123&quot;
+❌ Cache miss: &quot;nonexistentplace123&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+            </system-out>
+            <system-err>
+⚠️  No results found for: NonExistentPlace123
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Routing failures &gt; should return error when routing fails" time="0.0014113">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Pustevny → Radhošť&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Start&quot;,
+  &quot;endLocation&quot;: &quot;End&quot;,
+  &quot;mustVisit&quot;: [],
+  &quot;isRoundTrip&quot;: false,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 1ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: End
+🔍 Cache lookup: &quot;End&quot; -&gt; key: &quot;end&quot;
+❌ Cache miss: &quot;end&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina
+
+🔍 Cache lookup: &quot;Start&quot; -&gt; key: &quot;start&quot;
+❌ Cache miss: &quot;start&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina, end
+
+✅ Start: Test Place (50, 15)
+✅ End: Test Place (50, 15)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+            </system-out>
+            <system-err>
+
+❌ Route generation failed: Routing failed: Routing API unavailable
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Routing failures &gt; should return error when routing throws exception" time="0.0011903">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Pustevny → Radhošť&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Start&quot;,
+  &quot;endLocation&quot;: &quot;End&quot;,
+  &quot;mustVisit&quot;: [],
+  &quot;isRoundTrip&quot;: false,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: End
+🔍 Cache lookup: &quot;End&quot; -&gt; key: &quot;end&quot;
+✅ Cache found: &quot;end&quot; -&gt; {&quot;lat&quot;:50,&quot;lng&quot;:15,&quot;name&quot;:&quot;Test Place&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;description&quot;:&quot;Test Place&quot;,&quot;confidence&quot;:1}
+💾 Cache hit: End
+
+🔍 Cache lookup: &quot;Start&quot; -&gt; key: &quot;start&quot;
+✅ Cache found: &quot;start&quot; -&gt; {&quot;lat&quot;:50,&quot;lng&quot;:15,&quot;name&quot;:&quot;Test Place&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;description&quot;:&quot;Test Place&quot;,&quot;confidence&quot;:1}
+💾 Cache hit: Start
+
+✅ Start: Test Place (50, 15)
+✅ End: Test Place (50, 15)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+            </system-out>
+            <system-err>
+
+❌ Route generation failed: Network timeout
+
+            </system-err>
+        </testcase>
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Fallback route detection &gt; should detect and handle fallback route from routing service" time="0.0013408">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Pustevny → Radhošť&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Start&quot;,
+  &quot;endLocation&quot;: &quot;End&quot;,
+  &quot;mustVisit&quot;: [],
+  &quot;isRoundTrip&quot;: false,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: End
+🔍 Cache lookup: &quot;End&quot; -&gt; key: &quot;end&quot;
+✅ Cache found: &quot;end&quot; -&gt; {&quot;lat&quot;:50,&quot;lng&quot;:15,&quot;name&quot;:&quot;Test Place&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;description&quot;:&quot;Test Place&quot;,&quot;confidence&quot;:1}
+💾 Cache hit: End
+
+🔍 Cache lookup: &quot;Start&quot; -&gt; key: &quot;start&quot;
+✅ Cache found: &quot;start&quot; -&gt; {&quot;lat&quot;:50,&quot;lng&quot;:15,&quot;name&quot;:&quot;Test Place&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;description&quot;:&quot;Test Place&quot;,&quot;confidence&quot;:1}
+💾 Cache hit: Start
+
+✅ Start: Test Place (50, 15)
+✅ End: Test Place (50, 15)
+⏱️  Geocoding: 0ms
+   Direct distance: 0.0km
+
+4️⃣  Generating route with AI...
+
+⚠️  Using fallback route (straight line)
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 1ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 1ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+            </system-out>
+        </testcase>
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Region-aware geocoding fallback &gt; should successfully generate route for locations outside known hiking regions" time="0.0015591">
+            <system-out>
+
+🚀 Starting route generation...
+📝 Prompt: &quot;Kutná Hora → Kolín&quot;
+
+1️⃣  Extracting route requirements...
+
+✅ Entities: {
+  &quot;startLocation&quot;: &quot;Kutná Hora&quot;,
+  &quot;endLocation&quot;: &quot;Kolín&quot;,
+  &quot;mustVisit&quot;: [],
+  &quot;isRoundTrip&quot;: false,
+  &quot;distancePreference&quot;: &quot;medium&quot;,
+  &quot;difficulty&quot;: &quot;moderate&quot;,
+  &quot;_tokensUsed&quot;: 150
+}
+⏱️  Extraction: 0ms
+
+2️⃣  Geocoding locations (parallel)...
+🗺️  Detecting region from: Kolín
+🔍 Cache lookup: &quot;Kolín&quot; -&gt; key: &quot;kolín&quot;
+❌ Cache miss: &quot;kolín&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina, end, start
+
+🔍 Cache lookup: &quot;Kutná Hora&quot; -&gt; key: &quot;kutná hora&quot;
+❌ Cache miss: &quot;kutná hora&quot; not found
+   Available keys: praděd, lysá hora, sněžka, radhošť, ovčárna, karlova studánka, ostravice, pustevny, velká javořina, end, start, kolín
+
+✅ Start: Kutná Hora (49.9484, 15.268)
+✅ End: Kolín (50.0281, 15.1998)
+⏱️  Geocoding: 0ms
+   Direct distance: 10.1km
+
+4️⃣  Generating route with AI...
+
+✅ Route generated: 2 waypoints
+⏱️  Routing + AI: 0ms
+
+5️⃣  Calculating route statistics...
+✅ Distance: 7.6km, Elevation: +450m
+
+6️⃣  Generating GPX file...
+✅ GPX generated (32 bytes)
+
+7️⃣  Saving to database...
+
+✅ Route saved with ID: test-route-123
+
+
+🎉 Route generation complete!
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 0ms
+💰 Cost: $0.000007 (~0.00 Kč)
+
+
+            </system-out>
+        </testcase>
+    </testsuite>
+</testsuites>
