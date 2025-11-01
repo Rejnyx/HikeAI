@@ -15,9 +15,10 @@ import axios from 'axios';
 import { colors } from '../theme/colors';
 import { spacing, borderRadius, shadow } from '../theme/spacing';
 import { textStyles, fontSize, fontWeight } from '../theme/typography';
+import { API_ENDPOINTS, API_TIMEOUTS } from '../config/api';
+import { calculateDistance } from '../utils/distance';
 
 const { width } = Dimensions.get('window');
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.31.149:3000/api/v1';
 
 /**
  * PlaceDetailSheet - Bottom sheet showing detailed place information
@@ -39,22 +40,6 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
   const [distanceFromUser, setDistanceFromUser] = useState(null);
   const [routesCount, setRoutesCount] = useState(0);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-
-  // Haversine formula for GPS distance calculation
-  const calculateDistance = useCallback((lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Earth's radius in km
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance.toFixed(1);
-  }, []);
 
   // Bottom sheet snap points - ŘEŠÍ DRAG VS SCROLL KONFLIKT
   // Peek (25%) - Quick info
@@ -87,9 +72,9 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
 
       try {
         // Try Wikimedia Commons first
-        const response = await axios.get(`${API_URL}/places/photo`, {
+        const response = await axios.get(API_ENDPOINTS.PLACES_PHOTO, {
           params: { name: place.name },
-          timeout: 5000,
+          timeout: API_TIMEOUTS.DEFAULT,
         });
 
         if (response.data.success && response.data.photoUrl) {
@@ -122,9 +107,9 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
       setIsLoadingDescription(true);
 
       try {
-        const response = await axios.get(`${API_URL}/places/description`, {
+        const response = await axios.get(API_ENDPOINTS.PLACES_DESCRIPTION, {
           params: { name: place.name },
-          timeout: 5000,
+          timeout: API_TIMEOUTS.DEFAULT,
         });
 
         if (response.data.success && response.data.description) {
@@ -165,13 +150,13 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
 
         // Fetch routes count near this place (within 5km radius)
         if (place.location) {
-          const response = await axios.get(`${API_URL}/routes`, {
+          const response = await axios.get(API_ENDPOINTS.ROUTES_LIST, {
             params: {
               lat: place.location.lat,
               lng: place.location.lng,
               radius: 5, // 5km radius
             },
-            timeout: 5000,
+            timeout: API_TIMEOUTS.DEFAULT,
           });
 
           if (response.data.success) {

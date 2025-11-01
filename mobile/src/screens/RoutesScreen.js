@@ -44,56 +44,10 @@ import { textStyles, fontSize, fontWeight } from '../theme/typography';
 import { spacing, borderRadius } from '../theme/spacing';
 import PlaceDetailSheet from '../components/PlaceDetailSheet';
 import RouteInputModal from '../components/RouteInputModal';
-
-// API configuration
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.31.149:3000/api/v1';
+import { API_ENDPOINTS, API_TIMEOUTS } from '../config/api';
+import { calculateDistance, calculateEstimatedTime } from '../utils/distance';
 
 const { width, height } = Dimensions.get('window');
-
-// Helper: Calculate distance between two coordinates using Haversine formula
-const calculateDistance = (lat1, lon1, lat2, lon2) => {
-  const R = 6371; // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
-  return distance.toFixed(1); // Return distance in km with 1 decimal
-};
-
-// Helper: Calculate estimated hiking time based on distance and difficulty
-// Using Naismith's rule: 1 hour per 5km + 1 hour per 600m elevation
-const calculateEstimatedTime = (distanceKm, difficulty, elevationGain = null) => {
-  let baseTimeHours = distanceKm / 5; // Naismith's rule base
-
-  // Adjust for difficulty
-  const difficultyMultipliers = {
-    easy: 0.9,
-    moderate: 1.0,
-    difficult: 1.2,
-    hard: 1.4,
-  };
-  const multiplier = difficultyMultipliers[difficulty] || 1.0;
-
-  // Add elevation gain time if available
-  if (elevationGain) {
-    baseTimeHours += elevationGain / 600;
-  }
-
-  const totalHours = baseTimeHours * multiplier;
-
-  // Format output
-  if (totalHours < 1) {
-    return `${Math.round(totalHours * 60)} min`;
-  } else {
-    const hours = Math.floor(totalHours);
-    const minutes = Math.round((totalHours - hours) * 60);
-    return minutes > 0 ? `${hours}h ${minutes}min` : `${hours}h`;
-  }
-};
 
 // Helper: Get region from GPS coordinates
 const getRegionFromCoordinates = (lat, lng) => {
@@ -305,9 +259,9 @@ export default function RoutesScreen() {
       setShowSuggestions(true);
 
       try {
-        const response = await axios.get(`${API_URL}/places/suggest`, {
+        const response = await axios.get(API_ENDPOINTS.PLACES_SUGGEST, {
           params: { query: text, limit: 10 },
-          timeout: 5000,
+          timeout: API_TIMEOUTS.SEARCH,
         });
 
         if (response.data.success) {
@@ -367,12 +321,12 @@ export default function RoutesScreen() {
     console.log('Map pressed:', latitude, longitude);
 
     try {
-      const response = await axios.get(`${API_URL}/places/detail`, {
+      const response = await axios.get(API_ENDPOINTS.PLACES_DETAIL, {
         params: {
           lat: latitude.toFixed(5),
           lng: longitude.toFixed(5),
         },
-        timeout: 5000,
+        timeout: API_TIMEOUTS.DEFAULT,
       });
 
       if (response.data.success && response.data.place) {
@@ -409,9 +363,9 @@ export default function RoutesScreen() {
 
     try {
       const response = await axios.post(
-        `${API_URL}/routes/generate`,
+        API_ENDPOINTS.ROUTES_GENERATE,
         { prompt },
-        { timeout: 60000 } // 60s timeout for AI generation
+        { timeout: API_TIMEOUTS.ROUTE_GENERATION }
       );
 
       if (response.data.success) {
@@ -469,9 +423,9 @@ export default function RoutesScreen() {
     setIsLoadingRoutes(true);
     try {
       console.log('📋 Fetching routes from API...');
-      const response = await axios.get(`${API_URL}/routes`, {
+      const response = await axios.get(API_ENDPOINTS.ROUTES_LIST, {
         params: { limit: 20 },
-        timeout: 10000,
+        timeout: API_TIMEOUTS.DEFAULT,
       });
 
       if (response.data.success) {
@@ -919,7 +873,7 @@ export default function RoutesScreen() {
         {/* Bottom Sheet */}
         <BottomSheet
           ref={bottomSheetRef}
-          index={-1}
+          index={0}
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
           handleIndicatorStyle={styles.sheetIndicator}
