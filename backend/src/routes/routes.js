@@ -1,18 +1,41 @@
 import express from 'express';
 import { generateRoute } from '../services/routeGenerator.js';
 import { getRouteById, getAllRoutes } from '../services/supabase.js';
+import { strictLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
 // POST /api/v1/routes/generate - Generate new route with AI
-router.post('/generate', async (req, res) => {
+router.post('/generate', strictLimiter, async (req, res) => {
   try {
     const { prompt, constraints } = req.body;
 
+    // Input validation
     if (!prompt) {
       return res.status(400).json({
         error: 'Bad Request',
         message: 'prompt is required',
+      });
+    }
+
+    if (typeof prompt !== 'string') {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'prompt must be a string',
+      });
+    }
+
+    if (prompt.length < 5) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'prompt must be at least 5 characters',
+      });
+    }
+
+    if (prompt.length > 500) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'prompt must be less than 500 characters',
       });
     }
 

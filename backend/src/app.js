@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import { limiter } from './middleware/rateLimiter.js';
 import healthRoutes from './routes/health.js';
 import routeRoutes from './routes/routes.js';
 import placesRoutes from './routes/places.js';
@@ -12,11 +13,29 @@ dotenv.config();
 
 const app = express();
 
+// CORS configuration - whitelist allowed origins
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = process.env.ALLOWED_ORIGINS
+      ? process.env.ALLOWED_ORIGINS.split(',')
+      : ['http://localhost:3000', 'http://localhost:8081']; // Default for development
+
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
-app.use(morgan('dev'));
-app.use(express.json());
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+app.use(express.json({ limit: '10mb' })); // Limit request body size
+app.use(limiter); // Apply rate limiting to all requests
 
 // Routes
 app.use('/health', healthRoutes);
