@@ -8,8 +8,16 @@
  * - Geocodes destination + searches parking/train/bus POIs
  * - Stores results in cache for instant retrieval
  *
+ * Strategy #2: Seasonal Pre-Warming (NEW)
+ * - Filters destinations based on current season
+ * - Summer (Jun-Sep): High elevation peaks (Sněžka, Praděd, Lysá hora)
+ * - Winter (Dec-Feb): Ski areas (Klínovec, Ještěd, Smrk)
+ * - Spring (Mar-May): Moderate trails (Radhošť, Velká Javořina)
+ * - Fall (Oct-Nov): Scenic moderate trails (foliage season)
+ *
  * Expected Impact:
  * - 60% faster responses for popular routes (11.6s → 4-6s)
+ * - 80% cache hit rate (seasonal relevance)
  * - 60% cost reduction ($50/month → $20/month)
  * - ROI: $360/year savings
  */
@@ -41,6 +49,68 @@ export function initializeCachePreWarmer() {
   });
 
   console.log('⏰ Cache pre-warmer scheduled (daily at 2 AM)');
+}
+
+/**
+ * STRATEGY 2: Seasonal Pre-Warming Filtering
+ * Prioritizes destinations based on current season
+ *
+ * Season logic (Czech hiking patterns):
+ * - Summer (June-September): High elevation peaks (better weather, snow-free)
+ * - Winter (December-February): Ski resort areas + lower peaks (winter hiking)
+ * - Spring (March-May): Moderate difficulty trails (melting snow, mud)
+ * - Fall (October-November): Scenic moderate trails (foliage season)
+ *
+ * @param {Array} destinations - Full list of destinations
+ * @param {number} month - Current month (0-11, 0=January)
+ * @returns {Array} - Filtered destinations prioritized for current season
+ */
+function applySeasonalFiltering(destinations, month) {
+  // Define seasonal mountain categories
+  const SEASONAL_PRIORITIES = {
+    // Summer (months 5-8: June-September) - High elevation peaks
+    summer: ['Sněžka', 'Praděd', 'Lysá hora', 'Klínovec', 'Šerák'],
+
+    // Winter (months 11, 0, 1: December-February) - Ski areas + accessible peaks
+    winter: ['Klínovec', 'Ještěd', 'Smrk', 'Praděd'],
+
+    // Spring (months 2-4: March-May) - Moderate elevation, avoiding high snow
+    spring: ['Radhošť', 'Velká Javořina', 'Hostýn', 'Říp'],
+
+    // Fall (months 9-10: October-November) - Scenic moderate trails
+    fall: ['Radhošť', 'Říp', 'Šerák', 'Velká Javořina', 'Hostýn']
+  };
+
+  // Determine current season
+  let currentSeason;
+  if (month >= 5 && month <= 8) {
+    currentSeason = 'summer';
+  } else if (month === 11 || month === 0 || month === 1) {
+    currentSeason = 'winter';
+  } else if (month >= 2 && month <= 4) {
+    currentSeason = 'spring';
+  } else {
+    currentSeason = 'fall';
+  }
+
+  const priorityList = SEASONAL_PRIORITIES[currentSeason];
+
+  console.log(`   🌡️  Current season: ${currentSeason} (month ${month})`);
+  console.log(`   🎯 Priority mountains: ${priorityList.join(', ')}`);
+
+  // Filter destinations to only include seasonal priorities
+  // If analytics data is used, keep frequency info
+  const filtered = destinations.filter(d =>
+    priorityList.includes(d.destination)
+  );
+
+  // If filtering resulted in too few destinations (< 3), keep all
+  if (filtered.length < 3) {
+    console.log(`   ⚠️  Too few seasonal matches (${filtered.length}), keeping all destinations`);
+    return destinations;
+  }
+
+  return filtered;
 }
 
 /**
@@ -79,6 +149,16 @@ async function preWarmPopularDestinations() {
       { destination: 'Hostýn', frequency: 0 },
     ];
     console.log(`   📍 Using ${topDestinations.length} mountains from knowledge base`);
+  }
+
+  // STRATEGY 2: Seasonal Pre-Warming Enhancement
+  // Prioritize destinations based on current season
+  const currentMonth = new Date().getMonth(); // 0-11 (0=January, 11=December)
+  const seasonalDestinations = applySeasonalFiltering(topDestinations, currentMonth);
+
+  if (seasonalDestinations.length < topDestinations.length) {
+    console.log(`   🌡️  Seasonal filtering: ${topDestinations.length} → ${seasonalDestinations.length} destinations`);
+    topDestinations = seasonalDestinations;
   }
 
   // Pre-warm each destination
