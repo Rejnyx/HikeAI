@@ -1,0 +1,12 @@
+# Metrics data (generated at runtime)
+metrics/*.json
+
+# But keep the directory structure
+!metrics/.gitkeep
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*

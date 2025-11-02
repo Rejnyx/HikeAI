@@ -7,6 +7,7 @@ import { limiter } from './middleware/rateLimiter.js';
 import healthRoutes from './routes/health.js';
 import routeRoutes from './routes/routes.js';
 import placesRoutes from './routes/places.js';
+import monitoringRoutes from './routes/monitoring.js';
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,7 @@ app.use(limiter); // Apply rate limiting to all requests
 app.use('/health', healthRoutes);
 app.use('/api/v1/routes', routeRoutes);
 app.use('/api/v1/places', placesRoutes);
+app.use('/api/v1/monitoring', monitoringRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -51,7 +53,8 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       routes: '/api/v1/routes',
-      places: '/api/v1/places'
+      places: '/api/v1/places',
+      monitoring: '/api/v1/monitoring'
     }
   });
 });
