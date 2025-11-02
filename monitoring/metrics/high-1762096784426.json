@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-11-02T15:19:44.363Z",
+  "priority": "high",
+  "tests": [
+    {
+      "name": "BMAD Hooks System",
+      "status": "fail",
+      "error": "Command failed: cd bmad && npm test 2>&1\nSyst�m nem��e nal�zt uvedenou cestu.\r\n"
+    },
+    {
+      "name": "Backend Test Suite",
+      "status": "fail",
+      "error": "Command failed: cd backend && npm test 2>&1\nSyst�m nem��e nal�zt uvedenou cestu.\r\n"
+    },
+    {
+      "name": "Security: CORS Validation",
+      "status": "fail",
+      "error": "Error"
+    },
+    {
+      "name": "Security: Rate Limiting",
+      "status": "warn",
+      "details": {
+        "totalRequests": 25,
+        "rateLimitedCount": 0
+      }
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 0,
+    "failed": 3,
+    "warned": 1,
+    "passRate": "25.00%"
+  }
+}

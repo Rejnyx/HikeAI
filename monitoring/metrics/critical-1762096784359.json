@@ -1,0 +1,43 @@
+{
+  "timestamp": "2025-11-02T15:19:42.712Z",
+  "priority": "critical",
+  "tests": [
+    {
+      "name": "Backend API Health",
+      "status": "pass",
+      "duration": 1294,
+      "details": {
+        "status": "ok",
+        "timestamp": "2025-11-02T15:19:42.759Z",
+        "uptime": 65422.8913094,
+        "services": {
+          "database": "connected",
+          "openai": "configured",
+          "supabase": "configured"
+        },
+        "environment": "development"
+      }
+    },
+    {
+      "name": "Route Generation E2E",
+      "status": "fail",
+      "error": "read ECONNRESET"
+    },
+    {
+      "name": "Database Connection",
+      "status": "fail",
+      "error": "Error"
+    },
+    {
+      "name": "Places API",
+      "status": "fail",
+      "error": "Error"
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 1,
+    "failed": 3,
+    "passRate": "25.00%"
+  }
+}

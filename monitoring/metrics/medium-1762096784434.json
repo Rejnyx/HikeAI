@@ -1,0 +1,44 @@
+{
+  "timestamp": "2025-11-02T15:19:44.431Z",
+  "priority": "medium",
+  "tests": [
+    {
+      "name": "Performance Benchmarks",
+      "status": "warn",
+      "details": {
+        "apiResponseTime": {},
+        "routeGeneration": {},
+        "degradation": 100,
+        "error": "Error"
+      }
+    },
+    {
+      "name": "Memory Usage",
+      "status": "pass",
+      "details": {
+        "heapUsed": "14.22 MB",
+        "heapTotal": "19.71 MB",
+        "rss": "67.47 MB"
+      }
+    },
+    {
+      "name": "Test Coverage",
+      "status": "pass",
+      "details": {
+        "overall": 86.91,
+        "lines": 87,
+        "statements": 86.91,
+        "functions": 85.5,
+        "branches": 79.53,
+        "note": "Using last known coverage (run `npm test -- --coverage` to update)"
+      }
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "passed": 2,
+    "failed": 0,
+    "warned": 1,
+    "passRate": "100.00%"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "hikeai-continuous-testing",
+  "version": "1.0.0",
+  "description": "Continuous critical points testing framework for HikeAI",
+  "type": "module",
+  "main": "continuous-tester.js",
+  "scripts": {
+    "start": "node continuous-tester.js",
+    "test-once": "node test-once.js",
+    "dashboard": "npx http-server . -p 8080 -o dashboard.html",
+    "cleanup": "node cleanup-old-metrics.js"
+  },
+  "keywords": [
+    "testing",
+    "continuous",
+    "monitoring",
+    "hikeai"
+  ],
+  "author": "HikeAI Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-cron": "^3.0.3",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
