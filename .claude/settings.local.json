@@ -55,7 +55,9 @@
       "Bash(.env)",
       "Bash(git commit:*)",
       "SlashCommand(/bmad:bmm:agents:architect)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(git push:*)",
+      "Bash(npm run test-once:*)"
     ],
     "deny": [],
     "ask": []

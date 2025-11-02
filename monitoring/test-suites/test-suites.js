@@ -2,8 +2,14 @@
 import axios from 'axios';
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
+const PROJECT_ROOT = join(__dirname, '../..');
 
 /**
  * CRITICAL TESTS - Every 5 minutes
@@ -169,11 +175,12 @@ export async function runHighPriorityTests() {
   try {
     const start = Date.now();
 
-    // Run BMAD tests
-    const output = execSync('cd bmad && npm test 2>&1', {
+    // Run BMAD tests (using correct path)
+    const bmadPath = join(PROJECT_ROOT, 'bmad');
+    const output = execSync('npm test 2>&1', {
       timeout: 60000,
       encoding: 'utf-8',
-      cwd: process.cwd()
+      cwd: bmadPath
     });
 
     const duration = Date.now() - start;
@@ -226,10 +233,12 @@ export async function runHighPriorityTests() {
   try {
     const start = Date.now();
 
-    const output = execSync('cd backend && npm test 2>&1', {
+    // Run Backend tests (using correct path)
+    const backendPath = join(PROJECT_ROOT, 'backend');
+    const output = execSync('npm test 2>&1', {
       timeout: 60000,
       encoding: 'utf-8',
-      cwd: process.cwd()
+      cwd: backendPath
     });
 
     const duration = Date.now() - start;
