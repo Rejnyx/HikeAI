@@ -1,0 +1,124 @@
+# BMAD Hooks Configuration
+# Definuje všechny hooks pro workflow engine
+
+hooks:
+  # Ecosystem Validator - Pre-Completion
+  - name: ecosystem-validator-completion
+    type: pre-completion
+    enabled: true
+    priority: 100
+    config:
+      rules:
+        no_placeholders:
+          enabled: true
+          severity: halt
+        all_variables_resolved:
+          enabled: true
+          severity: warn
+        documentation_compliance:
+          enabled: true
+          severity: warn
+          required_sections:
+            - summary
+            - description
+          min_length: 50
+        no_empty_outputs:
+          enabled: true
+          severity: warn
+
+  # Ecosystem Validator - Post-Step (lighter validation)
+  - name: ecosystem-validator-step
+    type: post-step-execute
+    enabled: true
+    priority: 50
+    config:
+      rules:
+        no_placeholders:
+          enabled: true
+          severity: warn
+        no_empty_outputs:
+          enabled: true
+          severity: warn
+
+  # Telemetry Hook - Pre-Workflow-Init
+  - name: telemetry-init
+    type: pre-workflow-init
+    enabled: true
+    priority: 75
+    config:
+      collect_system_info: true
+      log_to_file: false
+
+  # Telemetry Hook - Post-Completion
+  - name: telemetry-completion
+    type: post-completion
+    enabled: true
+    priority: 75
+    config:
+      collect_metrics: true
+      generate_report: false
+
+  # Error Handler - On-Error
+  - name: error-handler
+    type: on-error
+    enabled: true
+    priority: 100
+    config:
+      log_errors: true
+      send_notifications: false
+      create_github_issue: false
+
+# Global hooks configuration
+config:
+  enabled: true
+  log_level: info
+  telemetry_enabled: true
+  max_hook_execution_time_ms: 5000
+
+# Hook types documentation
+hook_types:
+  - name: pre-workflow-init
+    description: Vykonává se před inicializací workflow
+    use_cases:
+      - Validace input parametrů
+      - Načítání globální konfigurace
+      - Telemetrie start
+
+  - name: post-workflow-init
+    description: Vykonává se po inicializaci workflow
+    use_cases:
+      - Validace loaded konfigurace
+      - Setup monitoring
+
+  - name: pre-step-execute
+    description: Vykonává se před každým krokem
+    use_cases:
+      - Step-specific validation
+      - Pre-conditions check
+
+  - name: post-step-execute
+    description: Vykonává se po každém kroku
+    use_cases:
+      - Output validation
+      - Partial telemetrie
+
+  - name: pre-completion
+    description: Vykonává se před dokončením workflow
+    use_cases:
+      - Final validation
+      - Quality gates
+      - Compliance checks
+
+  - name: post-completion
+    description: Vykonává se po dokončení workflow
+    use_cases:
+      - Cleanup
+      - Final telemetrie
+      - Report generation
+
+  - name: on-error
+    description: Vykonává se při chybě
+    use_cases:
+      - Error logging
+      - Notifications
+      - Rollback operations

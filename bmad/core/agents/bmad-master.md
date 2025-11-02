@@ -64,6 +64,7 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="*help">Show numbered menu</item>
     <item cmd="*list-tasks" action="list all tasks from {project-root}/bmad/_cfg/task-manifest.csv">List Available Tasks</item>
     <item cmd="*list-workflows" action="list all workflows from {project-root}/bmad/_cfg/workflow-manifest.csv">List Workflows</item>
+    <item cmd="*rada:navrhni" workflow="{project-root}/bmad/bmm/workflows/autonomous-council/workflow.yaml">Rada AI Agentů - Autonomous decision-making (BMAD-S)</item>
     <item cmd="*party-mode" workflow="{project-root}/bmad/core/workflows/party-mode/workflow.yaml">Group chat with all agents</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>

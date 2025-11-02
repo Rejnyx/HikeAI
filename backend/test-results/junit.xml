@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="121" failures="0" errors="0" time="0.2979752">
-    <testsuite name="tests/e2e/health-api.test.js" timestamp="2025-11-01T20:45:58.428Z" hostname="Rejnyx_x" tests="3" failures="0" errors="0" skipped="0" time="0.0355763">
-        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 200 with healthy status when database is connected" time="0.0260003">
+<testsuites name="vitest tests" tests="121" failures="0" errors="0" time="0.315209">
+    <testsuite name="tests/e2e/health-api.test.js" timestamp="2025-11-02T03:43:36.691Z" hostname="Rejnyx_x" tests="3" failures="0" errors="0" skipped="0" time="0.0397249">
+        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 200 with healthy status when database is connected" time="0.0290503">
         </testcase>
-        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 200 with degraded status when database connection fails" time="0.0041714">
+        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 200 with degraded status when database connection fails" time="0.0046831">
         </testcase>
-        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 503 when database throws error" time="0.0034164">
+        <testcase classname="tests/e2e/health-api.test.js" name="Health API - E2E Tests &gt; GET /health &gt; should return 503 when database throws error" time="0.0043346">
         </testcase>
     </testsuite>
-    <testsuite name="tests/e2e/places-api.test.js" timestamp="2025-11-01T20:45:58.430Z" hostname="Rejnyx_x" tests="20" failures="0" errors="0" skipped="0" time="0.1002081">
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return autocomplete suggestions successfully" time="0.0318377">
+    <testsuite name="tests/e2e/places-api.test.js" timestamp="2025-11-02T03:43:36.692Z" hostname="Rejnyx_x" tests="20" failures="0" errors="0" skipped="0" time="0.1083461">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return autocomplete suggestions successfully" time="0.0316646">
             <system-out>
 🔍 Suggest request: &quot;Lysá ho&quot;
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return 400 if query is too short" time="0.0043497">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return 400 if query is too short" time="0.0048719">
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return 400 if query is missing" time="0.0030752">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return 400 if query is missing" time="0.003951">
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should handle API errors gracefully" time="0.0036998">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should handle API errors gracefully" time="0.0064201">
             <system-out>
 🔍 Suggest request: &quot;Test&quot;
 
@@ -29,33 +29,33 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return empty array if no results" time="0.0040583">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/suggest &gt; should return empty array if no results" time="0.005228">
             <system-out>
 🔍 Suggest request: &quot;NonexistentPlace123&quot;
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return place details by query" time="0.0056543">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return place details by query" time="0.006657">
             <system-out>
 📍 Place detail request: Praděd
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return place details by coordinates (reverse geocoding)" time="0.0033292">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return place details by coordinates (reverse geocoding)" time="0.0043442">
             <system-out>
 📍 Place detail request: 50.73603,15.73978
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return 400 if neither query nor coordinates provided" time="0.0030072">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return 400 if neither query nor coordinates provided" time="0.0032494">
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return 404 if place not found" time="0.0035056">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should return 404 if place not found" time="0.0038305">
             <system-out>
 📍 Place detail request: NonexistentPlace123
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should handle API errors gracefully" time="0.0034217">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/detail &gt; should handle API errors gracefully" time="0.0038544">
             <system-out>
 📍 Place detail request: Test
 
@@ -65,15 +65,15 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return Wikipedia description successfully" time="0.0038108">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return Wikipedia description successfully" time="0.0036129">
             <system-out>
 📝 Description request for: Praděd (1491 m)
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 400 if name is missing" time="0.0028166">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 400 if name is missing" time="0.0030704">
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 404 for disambiguation pages" time="0.0032804">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 404 for disambiguation pages" time="0.0032428">
             <system-out>
 📝 Description request for: Hora
 
@@ -81,13 +81,13 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 404 if no description found" time="0.0029423">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should return 404 if no description found" time="0.0031606">
             <system-out>
 📝 Description request for: NonexistentPlace123
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should handle Wikipedia API errors" time="0.0032646">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/description &gt; should handle Wikipedia API errors" time="0.002894">
             <system-out>
 📝 Description request for: Test
 
@@ -97,79 +97,79 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Wikipedia" time="0.0033065">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Wikipedia" time="0.003253">
             <system-out>
 📷 Photo request for: Praděd (1491 m)
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Wikimedia Commons if Wikipedia fails" time="0.0031349">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Wikimedia Commons if Wikipedia fails" time="0.0030873">
             <system-out>
 📷 Photo request for: Sněžka
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Unsplash if other sources fail" time="0.0033924">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return photo from Unsplash if other sources fail" time="0.0036214">
             <system-out>
 📷 Photo request for: Lysá hora
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return 400 if name is missing" time="0.0027784">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return 400 if name is missing" time="0.0027485">
         </testcase>
-        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return 404 if no photo found from any source" time="0.0032853">
+        <testcase classname="tests/e2e/places-api.test.js" name="Places API - E2E Tests &gt; GET /api/v1/places/photo &gt; should return 404 if no photo found from any source" time="0.003579">
             <system-out>
 📷 Photo request for: NonexistentPlace123
 
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/e2e/routes-api.test.js" timestamp="2025-11-01T20:45:58.438Z" hostname="Rejnyx_x" tests="10" failures="0" errors="0" skipped="0" time="0.0765467">
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should generate a new route successfully" time="0.0369525">
+    <testsuite name="tests/e2e/routes-api.test.js" timestamp="2025-11-02T03:43:36.704Z" hostname="Rejnyx_x" tests="10" failures="0" errors="0" skipped="0" time="0.0836716">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should generate a new route successfully" time="0.0387114">
             <system-out>
 
 🌟 New route generation request: &quot;Okružní trasa na Radhošť z Pusteven&quot;
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should return 400 if prompt is missing" time="0.0046294">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should return 400 if prompt is missing" time="0.0053488">
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should return 500 if route generation fails" time="0.0036334">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; POST /api/v1/routes/generate &gt; should return 500 if route generation fails" time="0.0046243">
             <system-out>
 
 🌟 New route generation request: &quot;Invalid location&quot;
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should return list of routes with default pagination" time="0.004995">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should return list of routes with default pagination" time="0.0055454">
             <system-out>
 📋 Fetching routes: limit=20, offset=0
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should support custom pagination parameters" time="0.0063182">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should support custom pagination parameters" time="0.0086616">
             <system-out>
 📋 Fetching routes: limit=1, offset=2
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should return 500 if database query fails" time="0.0037465">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes &gt; should return 500 if database query fails" time="0.0041672">
             <system-out>
 📋 Fetching routes: limit=20, offset=0
 
             </system-out>
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id &gt; should return route details by ID" time="0.0035649">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id &gt; should return route details by ID" time="0.0037129">
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id &gt; should return 404 if route not found" time="0.0032063">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id &gt; should return 404 if route not found" time="0.0030898">
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id/gpx &gt; should download GPX file for a route" time="0.0037094">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id/gpx &gt; should download GPX file for a route" time="0.0040393">
         </testcase>
-        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id/gpx &gt; should return 404 if route or GPX data not found" time="0.0035889">
+        <testcase classname="tests/e2e/routes-api.test.js" name="Routes API - E2E Tests &gt; GET /api/v1/routes/:id/gpx &gt; should return 404 if route or GPX data not found" time="0.0038059">
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/route-generation.test.js" timestamp="2025-11-01T20:45:58.441Z" hostname="Rejnyx_x" tests="5" failures="0" errors="0" skipped="0" time="0.0112665">
-        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #1: Praděd okruh should generate ~15km route, not 160km" time="0.0049571">
+    <testsuite name="tests/integration/route-generation.test.js" timestamp="2025-11-02T03:43:36.707Z" hostname="Rejnyx_x" tests="5" failures="0" errors="0" skipped="0" time="0.0121158">
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #1: Praděd okruh should generate ~15km route, not 160km" time="0.0050583">
             <system-out>
 
 🚀 Starting route generation...
@@ -188,7 +188,7 @@
   &quot;difficulty&quot;: &quot;moderate&quot;,
   &quot;_tokensUsed&quot;: 150
 }
-⏱️  Extraction: 1ms
+⏱️  Extraction: 0ms
 
 2️⃣  Geocoding locations (parallel)...
 🗺️  Detecting region from: Praděd
@@ -235,7 +235,7 @@
 
 🎉 Route generation complete!
 ⏱️  Total: 2ms (0.0s)
-   - Extraction: 1ms
+   - Extraction: 0ms
    - Geocoding: 1ms
    - Routing+AI: 0ms
 💰 Cost: $0.000007 (~0.00 Kč)
@@ -245,7 +245,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #2: Sněžka should generate round trip from Sněžka, not from Praha" time="0.0013149">
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #2: Sněžka should generate round trip from Sněžka, not from Praha" time="0.0014843">
             <system-out>
 
 🚀 Starting route generation...
@@ -275,7 +275,7 @@
 ℹ️  Round trip detected (start == end), using same coordinates
 ✅ Start: Sněžka (50.73603, 15.73978)
 ✅ End: Sněžka (50.73603, 15.73978)
-⏱️  Geocoding: 0ms
+⏱️  Geocoding: 1ms
    Direct distance: 0.0km
 
 4️⃣  Generating route with AI...
@@ -297,7 +297,7 @@
 🎉 Route generation complete!
 ⏱️  Total: 1ms (0.0s)
    - Extraction: 0ms
-   - Geocoding: 0ms
+   - Geocoding: 1ms
    - Routing+AI: 0ms
 💰 Cost: $0.000007 (~0.00 Kč)
 
@@ -306,7 +306,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km" time="0.001212">
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Critical Bug Fixes &gt; BUG #3: Round trip Pustevny-Radhošť should be ~10km, not 932km" time="0.0013999">
             <system-out>
 
 🚀 Starting route generation...
@@ -371,7 +371,7 @@
 
 
 🎉 Route generation complete!
-⏱️  Total: 1ms (0.0s)
+⏱️  Total: 0ms (0.0s)
    - Extraction: 0ms
    - Geocoding: 0ms
    - Routing+AI: 0ms
@@ -382,7 +382,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Basic Route Generation &gt; should generate valid route for simple prompt" time="0.0009514">
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Basic Route Generation &gt; should generate valid route for simple prompt" time="0.0013501">
             <system-out>
 
 🚀 Starting route generation...
@@ -399,7 +399,7 @@
   &quot;difficulty&quot;: &quot;easy&quot;,
   &quot;_tokensUsed&quot;: 150
 }
-⏱️  Extraction: 0ms
+⏱️  Extraction: 1ms
 
 2️⃣  Geocoding locations (parallel)...
 🗺️  Detecting region from: Pustevny
@@ -432,8 +432,8 @@
 
 
 🎉 Route generation complete!
-⏱️  Total: 0ms (0.0s)
-   - Extraction: 0ms
+⏱️  Total: 1ms (0.0s)
+   - Extraction: 1ms
    - Geocoding: 0ms
    - Routing+AI: 0ms
 💰 Cost: $0.000007 (~0.00 Kč)
@@ -441,7 +441,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Basic Route Generation &gt; should include route metadata" time="0.0009164">
+        <testcase classname="tests/integration/route-generation.test.js" name="Route Generation Integration Tests &gt; Basic Route Generation &gt; should include route metadata" time="0.0011464">
             <system-out>
 
 🚀 Starting route generation...
@@ -501,46 +501,46 @@
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/supabase.test.js" timestamp="2025-11-01T20:45:58.445Z" hostname="Rejnyx_x" tests="18" failures="0" errors="0" skipped="0" time="0.0154338">
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; testConnection() &gt; should return true on successful connection" time="0.0034996">
+    <testsuite name="tests/integration/supabase.test.js" timestamp="2025-11-02T03:43:36.710Z" hostname="Rejnyx_x" tests="18" failures="0" errors="0" skipped="0" time="0.0120204">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; testConnection() &gt; should return true on successful connection" time="0.0025628">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; testConnection() &gt; should return false on connection error" time="0.0004451">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; testConnection() &gt; should return false on connection error" time="0.0004689">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; insertRoute() &gt; should insert route successfully" time="0.0005298">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; insertRoute() &gt; should insert route successfully" time="0.000471">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; insertRoute() &gt; should handle insert error" time="0.0003882">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; insertRoute() &gt; should handle insert error" time="0.000342">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getRouteById() &gt; should fetch route by ID successfully" time="0.0005333">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getRouteById() &gt; should fetch route by ID successfully" time="0.0004962">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getRouteById() &gt; should handle route not found" time="0.0003412">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getRouteById() &gt; should handle route not found" time="0.0003542">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should fetch routes with default pagination" time="0.0005118">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should fetch routes with default pagination" time="0.0005691">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should support custom pagination" time="0.0004177">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should support custom pagination" time="0.0003308">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should apply region filter" time="0.000426">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should apply region filter" time="0.0003461">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should handle database error" time="0.0003264">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getAllRoutes() &gt; should handle database error" time="0.0003661">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should search routes near location" time="0.0008974">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should search routes near location" time="0.0008323">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should use default radius of 50km" time="0.0016892">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should use default radius of 50km" time="0.0012888">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should handle search error" time="0.0003246">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; searchRoutesNear() &gt; should handle search error" time="0.000286">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; logGeneration() &gt; should log generation attempt successfully" time="0.0004934">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; logGeneration() &gt; should log generation attempt successfully" time="0.0005275">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; logGeneration() &gt; should handle logging error" time="0.0003203">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; logGeneration() &gt; should handle logging error" time="0.0003064">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should calculate generation statistics" time="0.0006077">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should calculate generation statistics" time="0.0005521">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should handle empty logs" time="0.0003027">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should handle empty logs" time="0.0002725">
         </testcase>
-        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should handle stats fetch error" time="0.0013435">
+        <testcase classname="tests/integration/supabase.test.js" name="Supabase Service - Integration Tests &gt; getGenerationStats() &gt; should handle stats fetch error" time="0.0002541">
         </testcase>
     </testsuite>
-    <testsuite name="tests/unit/geocoding.test.js" timestamp="2025-11-01T20:45:58.449Z" hostname="Rejnyx_x" tests="13" failures="0" errors="0" skipped="0" time="0.0100584">
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return coordinates for valid location" time="0.0028908">
+    <testsuite name="tests/unit/geocoding.test.js" timestamp="2025-11-02T03:43:36.713Z" hostname="Rejnyx_x" tests="13" failures="0" errors="0" skipped="0" time="0.0089404">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return coordinates for valid location" time="0.0023188">
             <system-out>
 🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
 ✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;,&quot;elevation&quot;:1129}
@@ -548,7 +548,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return null for non-existent location" time="0.0008697">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return null for non-existent location" time="0.0009494">
             <system-out>
 🔍 Cache lookup: &quot;NonExistentPlace123&quot; -&gt; key: &quot;nonexistentplace123&quot;
 ❌ Cache miss: &quot;nonexistentplace123&quot; not found
@@ -560,14 +560,14 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return multiple results when limit &gt; 1" time="0.0013387">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should return multiple results when limit &gt; 1" time="0.0012351">
             <system-out>
 🔍 Cache lookup: &quot;Ovčárna&quot; -&gt; key: &quot;ovčárna&quot;
 ✅ Cache found: &quot;ovčárna&quot; -&gt; {&quot;lat&quot;:50.07777,&quot;lng&quot;:17.26027,&quot;name&quot;:&quot;Ovčárna&quot;,&quot;type&quot;:&quot;chalet&quot;}
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should use cache for repeated queries (limit=1)" time="0.00077">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should use cache for repeated queries (limit=1)" time="0.0007156">
             <system-out>
 🔍 Cache lookup: &quot;Kriváň&quot; -&gt; key: &quot;kriváň&quot;
 ❌ Cache miss: &quot;kriváň&quot; not found
@@ -579,7 +579,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should NOT use cache when limit &gt; 1" time="0.0004103">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should NOT use cache when limit &gt; 1" time="0.0004491">
             <system-out>
 🔍 Cache lookup: &quot;Klínovec&quot; -&gt; key: &quot;klínovec&quot;
 ❌ Cache miss: &quot;klínovec&quot; not found
@@ -590,7 +590,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should handle API timeout gracefully" time="0.0004582">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; geocode() &gt; should handle API timeout gracefully" time="0.0004986">
             <system-out>
 🔍 Cache lookup: &quot;SomePlace&quot; -&gt; key: &quot;someplace&quot;
 ❌ Cache miss: &quot;someplace&quot; not found
@@ -602,20 +602,20 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should calculate correct distance between two points" time="0.0002945">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should calculate correct distance between two points" time="0.0002786">
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should return 0 for same coordinates" time="0.0001058">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should return 0 for same coordinates" time="0.0000905">
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should calculate long distances correctly" time="0.0001805">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Service &gt; calculateDistance() &gt; should calculate long distances correctly" time="0.0001348">
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should store and retrieve cached location" time="0.0003722">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should store and retrieve cached location" time="0.0002821">
             <system-out>
 🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
 ✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;}
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should be case-insensitive" time="0.0003161">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should be case-insensitive" time="0.0002899">
             <system-out>
 🔍 Cache lookup: &quot;radhošť&quot; -&gt; key: &quot;radhošť&quot;
 ✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;}
@@ -624,7 +624,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should return null for non-cached location" time="0.0003099">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should return null for non-cached location" time="0.0002303">
             <system-out>
 🔍 Cache lookup: &quot;NonExistent&quot; -&gt; key: &quot;nonexistent&quot;
 ❌ Cache miss: &quot;nonexistent&quot; not found
@@ -632,7 +632,7 @@
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should handle cache expiration (TTL)" time="0.0002772">
+        <testcase classname="tests/unit/geocoding.test.js" name="Geocoding Cache &gt; should handle cache expiration (TTL)" time="0.0002237">
             <system-out>
 🔍 Cache lookup: &quot;Radhošť&quot; -&gt; key: &quot;radhošť&quot;
 ✅ Cache found: &quot;radhošť&quot; -&gt; {&quot;lat&quot;:49.48889,&quot;lng&quot;:18.21389,&quot;name&quot;:&quot;Radhošť&quot;,&quot;type&quot;:&quot;peak&quot;}
@@ -640,119 +640,119 @@
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/unit/gpx.test.js" timestamp="2025-11-01T20:45:58.454Z" hostname="Rejnyx_x" tests="18" failures="0" errors="0" skipped="0" time="0.0081833">
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should generate valid GPX XML with basic waypoints" time="0.0025917">
+    <testsuite name="tests/unit/gpx.test.js" timestamp="2025-11-02T03:43:36.717Z" hostname="Rejnyx_x" tests="18" failures="0" errors="0" skipped="0" time="0.0069716">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should generate valid GPX XML with basic waypoints" time="0.0023909">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should include metadata in GPX output" time="0.0002751">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should include metadata in GPX output" time="0.000268">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should escape XML special characters in metadata" time="0.0002143">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should escape XML special characters in metadata" time="0.0001803">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should include POIs as waypoints in GPX" time="0.0002673">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should include POIs as waypoints in GPX" time="0.0002359">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should handle waypoints without elevation data" time="0.0002718">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should handle waypoints without elevation data" time="0.00029">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should use default metadata when not provided" time="0.0001298">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should use default metadata when not provided" time="0.0001729">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should handle empty POIs array gracefully" time="0.0001362">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; generateGPX() &gt; should handle empty POIs array gracefully" time="0.0001376">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate total distance from waypoints" time="0.0003788">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate total distance from waypoints" time="0.0003277">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation gain correctly" time="0.0002143">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation gain correctly" time="0.0001938">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation loss correctly" time="0.0000974">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation loss correctly" time="0.0001194">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation gain and loss separately" time="0.0001273">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should calculate elevation gain and loss separately" time="0.0000938">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should estimate duration using Naismith rule" time="0.0001394">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should estimate duration using Naismith rule" time="0.0001146">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should return zeros for empty waypoints array" time="0.0001412">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should return zeros for empty waypoints array" time="0.000114">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should return zeros for single waypoint" time="0.0001356">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should return zeros for single waypoint" time="0.0001067">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should handle waypoints without elevation data gracefully" time="0.0001504">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; calculateRouteStats() &gt; should handle waypoints without elevation data gracefully" time="0.0000884">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should return same waypoints if &lt;= 2 points" time="0.0007465">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should return same waypoints if &lt;= 2 points" time="0.0005023">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should simplify route using Douglas-Peucker algorithm" time="0.0003407">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should simplify route using Douglas-Peucker algorithm" time="0.0001617">
         </testcase>
-        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should keep significant waypoints with low tolerance" time="0.0001296">
-        </testcase>
-    </testsuite>
-    <testsuite name="tests/unit/mapyczRouting.test.js" timestamp="2025-11-01T20:45:58.457Z" hostname="Rejnyx_x" tests="13" failures="0" errors="0" skipped="0" time="0.0122844">
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should calculate route between two points" time="0.0052031">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle geometry with nested structure" time="0.0004684">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle waypoints with intermediate points" time="0.0006868">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle elevation missing from coordinates" time="0.0003825">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Round trips &gt; should detect and handle round trip" time="0.0008151">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Round trips &gt; should handle multiple waypoints in round trip" time="0.0004356">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on API error" time="0.000691">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on missing geometry" time="0.000337">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on HTTP error" time="0.0003137">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should generate fallback route for round trip" time="0.0003544">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should handle empty waypoints array" time="0.0005033">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should limit waypoints to 15 (Mapy.cz limit)" time="0.0003565">
-        </testcase>
-        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should handle timeout with fallback" time="0.0002831">
+        <testcase classname="tests/unit/gpx.test.js" name="GPX Generation &gt; simplifyRoute() &gt; should keep significant waypoints with low tolerance" time="0.0000664">
         </testcase>
     </testsuite>
-    <testsuite name="tests/unit/region-detection.test.js" timestamp="2025-11-01T20:45:58.460Z" hostname="Rejnyx_x" tests="14" failures="0" errors="0" skipped="0" time="0.0088672">
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Beskydy region correctly" time="0.0020665">
+    <testsuite name="tests/unit/mapyczRouting.test.js" timestamp="2025-11-02T03:43:36.720Z" hostname="Rejnyx_x" tests="13" failures="0" errors="0" skipped="0" time="0.0151908">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should calculate route between two points" time="0.0042195">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Jeseníky region correctly" time="0.0002364">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle geometry with nested structure" time="0.0004785">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Krkonoše region correctly" time="0.0001772">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle waypoints with intermediate points" time="0.0006929">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Šumava region correctly" time="0.0001871">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Normal routes &gt; should handle elevation missing from coordinates" time="0.0009754">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should return null for coordinates outside known regions" time="0.0001138">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Round trips &gt; should detect and handle round trip" time="0.000731">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should handle boundary cases - edge of Beskydy region" time="0.0001543">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Round trips &gt; should handle multiple waypoints in round trip" time="0.0004193">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should return null for coordinates just outside region boundaries" time="0.0000904">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on API error" time="0.0006878">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should call normal geocode when no region provided" time="0.0013202">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on missing geometry" time="0.0003759">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should filter results by region when multiple results exist" time="0.0011129">
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should fallback on HTTP error" time="0.0003162">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Error handling &amp; fallback &gt; should generate fallback route for round trip" time="0.0003857">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should handle empty waypoints array" time="0.0008282">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should limit waypoints to 15 (Mapy.cz limit)" time="0.0004568">
+        </testcase>
+        <testcase classname="tests/unit/mapyczRouting.test.js" name="Mapy.cz Routing Service &gt; getHikingRoute() - Edge cases &gt; should handle timeout with fallback" time="0.0018832">
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/unit/region-detection.test.js" timestamp="2025-11-02T03:43:36.723Z" hostname="Rejnyx_x" tests="14" failures="0" errors="0" skipped="0" time="0.00821">
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Beskydy region correctly" time="0.0017917">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Jeseníky region correctly" time="0.0002454">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Krkonoše region correctly" time="0.0001999">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should detect Šumava region correctly" time="0.0001915">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should return null for coordinates outside known regions" time="0.0001226">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should handle boundary cases - edge of Beskydy region" time="0.0001274">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; detectRegion() &gt; should return null for coordinates just outside region boundaries" time="0.0000701">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should call normal geocode when no region provided" time="0.0011032">
+        </testcase>
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should filter results by region when multiple results exist" time="0.001084">
             <system-out>
    🔍 Found 2 results for &quot;Ovčárna&quot;, filtering by region Beskydy
    ✓ Selected: Ovčárna (7.2km from region center)
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should return single result when only one match exists" time="0.0001629">
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should return single result when only one match exists" time="0.0002131">
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should fallback to closest match when no results within radius" time="0.0003301">
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should fallback to closest match when no results within radius" time="0.0004533">
             <system-out>
    🔍 Found 2 results for &quot;Praha&quot;, filtering by region Beskydy
    ✓ Selected: Ostrava (37.0km from region center)
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should handle geocoding errors gracefully" time="0.0006573">
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; geocodeWithRegionContext() &gt; should handle geocoding errors gracefully" time="0.0005726">
             <system-err>
 ❌ Region-aware geocoding failed: API Error
 
             </system-err>
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; Region-aware geocoding integration &gt; should prefer Jeseníky Ovčárna over Benešov Ovčárna when region is Jeseníky" time="0.0003518">
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; Region-aware geocoding integration &gt; should prefer Jeseníky Ovčárna over Benešov Ovčárna when region is Jeseníky" time="0.000373">
             <system-out>
    🔍 Found 2 results for &quot;Ovčárna&quot;, filtering by region Jeseníky
    ✓ Selected: Ovčárna (5.0km from region center)
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; Region-aware geocoding integration &gt; should handle single-word prompts with region context" time="0.0003885">
+        <testcase classname="tests/unit/region-detection.test.js" name="Region Detection &gt; Region-aware geocoding integration &gt; should handle single-word prompts with region context" time="0.0003947">
             <system-out>
    🔍 Found 1 results for &quot;Pustevny&quot;, filtering by region Beskydy
    ✓ Selected: Pustevny (12.2km from region center)
@@ -760,8 +760,8 @@
             </system-out>
         </testcase>
     </testsuite>
-    <testsuite name="tests/unit/routeGenerator-edge-cases.test.js" timestamp="2025-11-01T20:45:58.465Z" hostname="Rejnyx_x" tests="7" failures="0" errors="0" skipped="0" time="0.0195505">
-        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Must-visit waypoint same as start/end &gt; should skip must-visit location that is same as start point" time="0.0077205">
+    <testsuite name="tests/unit/routeGenerator-edge-cases.test.js" timestamp="2025-11-02T03:43:36.726Z" hostname="Rejnyx_x" tests="7" failures="0" errors="0" skipped="0" time="0.0200174">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Must-visit waypoint same as start/end &gt; should skip must-visit location that is same as start point" time="0.0069266">
             <system-out>
 
 🚀 Starting route generation...
@@ -815,7 +815,7 @@
    ⚠️  Skipping Radhošť (same as start/end point)
 
 ✅ Route generated: 2 waypoints
-⏱️  Routing + AI: 1ms
+⏱️  Routing + AI: 0ms
 
 5️⃣  Calculating route statistics...
 ✅ Distance: 7.6km, Elevation: +450m
@@ -829,16 +829,16 @@
 
 
 🎉 Route generation complete!
-⏱️  Total: 2ms (0.0s)
+⏱️  Total: 3ms (0.0s)
    - Extraction: 0ms
    - Geocoding: 1ms
-   - Routing+AI: 1ms
+   - Routing+AI: 0ms
 💰 Cost: $0.000007 (~0.00 Kč)
 
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Must-visit waypoint same as start/end &gt; should skip must-visit location that is same as end point" time="0.0020281">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Must-visit waypoint same as start/end &gt; should skip must-visit location that is same as end point" time="0.0025937">
             <system-out>
 
 🚀 Starting route generation...
@@ -874,7 +874,7 @@
 
 ✅ Start: Pustevny (49.48333, 18.23333)
 ✅ End: Radhošť (49.48889, 18.21389)
-⏱️  Geocoding: 1ms
+⏱️  Geocoding: 0ms
    Direct distance: 1.5km
 
 4️⃣  Generating route with AI...
@@ -888,7 +888,7 @@
    ⚠️  Skipping Radhošť (same as start/end point)
 
 ✅ Route generated: 2 waypoints
-⏱️  Routing + AI: 0ms
+⏱️  Routing + AI: 1ms
 
 5️⃣  Calculating route statistics...
 ✅ Distance: 7.6km, Elevation: +450m
@@ -904,14 +904,14 @@
 🎉 Route generation complete!
 ⏱️  Total: 1ms (0.0s)
    - Extraction: 0ms
-   - Geocoding: 1ms
-   - Routing+AI: 0ms
+   - Geocoding: 0ms
+   - Routing+AI: 1ms
 💰 Cost: $0.000007 (~0.00 Kč)
 
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Geocoding errors for must-visit locations &gt; should continue route generation if must-visit location fails to geocode" time="0.0021952">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Geocoding errors for must-visit locations &gt; should continue route generation if must-visit location fails to geocode" time="0.0025766">
             <system-out>
 
 🚀 Starting route generation...
@@ -949,7 +949,7 @@
 ℹ️  Round trip detected (start == end), using same coordinates
 ✅ Start: Pustevny (49.48333, 18.23333)
 ✅ End: Pustevny (49.48333, 18.23333)
-⏱️  Geocoding: 0ms
+⏱️  Geocoding: 1ms
    Direct distance: 0.0km
 
 4️⃣  Generating route with AI...
@@ -982,7 +982,7 @@
 🎉 Route generation complete!
 ⏱️  Total: 1ms (0.0s)
    - Extraction: 0ms
-   - Geocoding: 0ms
+   - Geocoding: 1ms
    - Routing+AI: 0ms
 💰 Cost: $0.000007 (~0.00 Kč)
 
@@ -993,7 +993,7 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Routing failures &gt; should return error when routing fails" time="0.0014113">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Routing failures &gt; should return error when routing fails" time="0.0014175">
             <system-out>
 
 🚀 Starting route generation...
@@ -1010,7 +1010,7 @@
   &quot;difficulty&quot;: &quot;moderate&quot;,
   &quot;_tokensUsed&quot;: 150
 }
-⏱️  Extraction: 1ms
+⏱️  Extraction: 0ms
 
 2️⃣  Geocoding locations (parallel)...
 🗺️  Detecting region from: End
@@ -1036,7 +1036,7 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Routing failures &gt; should return error when routing throws exception" time="0.0011903">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Routing failures &gt; should return error when routing throws exception" time="0.0011186">
             <system-out>
 
 🚀 Starting route generation...
@@ -1079,7 +1079,7 @@
 
             </system-err>
         </testcase>
-        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Fallback route detection &gt; should detect and handle fallback route from routing service" time="0.0013408">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Fallback route detection &gt; should detect and handle fallback route from routing service" time="0.0015404">
             <system-out>
 
 🚀 Starting route generation...
@@ -1110,7 +1110,7 @@
 
 ✅ Start: Test Place (50, 15)
 ✅ End: Test Place (50, 15)
-⏱️  Geocoding: 0ms
+⏱️  Geocoding: 1ms
    Direct distance: 0.0km
 
 4️⃣  Generating route with AI...
@@ -1118,7 +1118,7 @@
 ⚠️  Using fallback route (straight line)
 
 ✅ Route generated: 2 waypoints
-⏱️  Routing + AI: 1ms
+⏱️  Routing + AI: 0ms
 
 5️⃣  Calculating route statistics...
 ✅ Distance: 7.6km, Elevation: +450m
@@ -1134,14 +1134,14 @@
 🎉 Route generation complete!
 ⏱️  Total: 1ms (0.0s)
    - Extraction: 0ms
-   - Geocoding: 0ms
-   - Routing+AI: 1ms
+   - Geocoding: 1ms
+   - Routing+AI: 0ms
 💰 Cost: $0.000007 (~0.00 Kč)
 
 
             </system-out>
         </testcase>
-        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Region-aware geocoding fallback &gt; should successfully generate route for locations outside known hiking regions" time="0.0015591">
+        <testcase classname="tests/unit/routeGenerator-edge-cases.test.js" name="Route Generator - Edge Cases &gt; Edge Case: Region-aware geocoding fallback &gt; should successfully generate route for locations outside known hiking regions" time="0.0017045">
             <system-out>
 
 🚀 Starting route generation...

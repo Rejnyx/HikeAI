@@ -37,6 +37,10 @@ pattern_categories: "{installed_path}/pattern-categories.csv"
 # Output configuration
 default_output_file: "{output_folder}/architecture.md"
 
+# Hooks configuration
+hooks_enabled: true
+hooks_config: "{project-root}/bmad/core/hooks/hooks.yaml"
+
 # Workflow metadata
 version: "1.3.2"
 replaces: "architecture"

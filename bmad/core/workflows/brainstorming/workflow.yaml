@@ -27,6 +27,10 @@ brain_techniques: "{installed_path}/brain-methods.csv"
 # Output configuration
 default_output_file: "{output_folder}/brainstorming-session-results-{{date}}.md"
 
+# Hooks configuration
+hooks_enabled: true
+hooks_config: "{project-root}/bmad/core/hooks/hooks.yaml"
+
 standalone: true
 
 web_bundle:

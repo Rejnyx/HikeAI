@@ -1,0 +1,356 @@
+# BMAD Hive Mind - Multi-AI Orchestrator Configuration
+# Version: 1.0
+# Purpose: Route tasks to specialized AI workers based on expertise
+
+name: bmad-hive-mind
+version: 1.0
+description: Multi-AI orchestration system for distributed development
+
+# Project Configuration
+project_root: '{__dirname}/../../..'
+config_source: '{project_root}/bmad/bmm/config.yaml'
+
+# Task Sources
+task_queue: '{project_root}/docs/inbox/task-queue.yaml'
+request_inbox: '{project_root}/docs/inbox/requests.yaml'
+
+# AI Workers Configuration
+ai_workers:
+  # Worker 1: Claude Code (Sonnet 4.5)
+  - name: claude-code
+    display_name: "Claude Code (Sonnet 4.5)"
+    type: anthropic-sonnet-4.5
+    endpoint: local  # Already running
+    status: active
+
+    # BMAD Roles
+    roles:
+      - winston      # Architect
+      - john         # Product Manager
+      - sophia       # Council Facilitator
+
+    # Capabilities
+    capabilities:
+      - architecture
+      - planning
+      - council-facilitation
+      - code-review
+      - strategic-decision
+
+    # Performance Limits
+    max_concurrent_tasks: 3
+    timeout_minutes: 60
+
+    # Cost (informational)
+    cost_model: subscription
+    cost_per_task: 0.00  # Included in subscription
+
+  # Worker 2: Gemini CLI (2.0 Flash)
+  - name: gemini-cli
+    display_name: "Gemini CLI (2.0 Flash)"
+    type: google-gemini-2.0-flash
+    endpoint: cli  # Command-line interface
+    command: gemini-cli
+    status: planned  # Not yet integrated
+
+    # BMAD Roles
+    roles:
+      - mary         # Business Analyst
+      - sally        # UX Designer
+      - docs-specialist
+
+    # Capabilities
+    capabilities:
+      - documentation
+      - research
+      - content-creation
+      - analysis
+
+    # Performance Limits
+    max_concurrent_tasks: 5  # Fast, can handle more
+    timeout_minutes: 15
+
+    # Cost
+    cost_model: free-tier
+    cost_per_task: 0.00
+    rate_limit_rpm: 15  # Requests per minute
+
+  # Worker 3: Codex API (GPT-4 based)
+  - name: codex
+    display_name: "Codex API (GPT-4)"
+    type: openai-codex
+    endpoint: https://api.openai.com/v1/completions
+    status: planned  # Not yet integrated
+
+    # BMAD Roles
+    roles:
+      - amelia       # Developer
+      - refactor-specialist
+      - test-generator
+
+    # Capabilities
+    capabilities:
+      - implementation
+      - refactoring
+      - bug-fix
+      - test-generation
+
+    # Performance Limits
+    max_concurrent_tasks: 10  # API can handle many
+    timeout_minutes: 30
+
+    # Cost
+    cost_model: pay-per-use
+    cost_per_1k_tokens: 0.03
+    estimated_cost_per_task: 0.50  # Rough estimate
+
+    # Authentication
+    api_key_env: OPENAI_API_KEY
+
+  # Worker 4: Nova Bot (Custom Analytics)
+  - name: nova
+    display_name: "Nova Analytics Bot"
+    type: custom-python
+    endpoint: local
+    status: active  # Already exists as BMAD agent
+
+    # BMAD Roles
+    roles:
+      - nova         # Session Manager
+
+    # Capabilities
+    capabilities:
+      - session-recording
+      - analytics
+      - performance-tracking
+      - optimization-suggestions
+
+    # Performance Limits
+    max_concurrent_tasks: unlimited  # Async logging
+    timeout_minutes: 5
+
+    # Cost
+    cost_model: free
+    cost_per_task: 0.00
+
+# Task Routing Rules
+routing_rules:
+  # Architecture & Design
+  architecture:
+    primary: claude-code
+    fallback: null
+    reason: Winston (Architect) expertise in system design
+    estimated_duration: 30-60 min
+
+  # Planning & Roadmap
+  planning:
+    primary: claude-code
+    fallback: null
+    reason: John (PM) expertise in product strategy
+    estimated_duration: 20-40 min
+
+  # Autonomous Council
+  council:
+    primary: claude-code
+    fallback: null
+    reason: Sophia (Facilitator) orchestrates multi-agent discussions
+    estimated_duration: 15-60 min
+
+  # Code Review
+  code-review:
+    primary: claude-code
+    fallback: null
+    reason: Senior developer perspective, strategic review
+    estimated_duration: 10-30 min
+
+  # Documentation
+  documentation:
+    primary: gemini-cli
+    fallback: claude-code
+    reason: Fast iteration, excellent at content generation
+    estimated_duration: 5-15 min
+
+  # Research & Analysis
+  research:
+    primary: gemini-cli
+    fallback: claude-code
+    reason: Mary (Analyst) expertise in market research
+    estimated_duration: 10-30 min
+
+  # Content Creation
+  content:
+    primary: gemini-cli
+    fallback: claude-code
+    reason: Blog posts, guides, marketing copy
+    estimated_duration: 10-20 min
+
+  # Implementation
+  implementation:
+    primary: codex
+    fallback: claude-code
+    reason: Fast code generation, implementation speed
+    estimated_duration: 10-30 min
+
+  # Refactoring
+  refactoring:
+    primary: codex
+    fallback: null
+    reason: Specialized for code optimization
+    estimated_duration: 5-15 min
+
+  # Bug Fix
+  bug-fix:
+    primary: codex
+    fallback: claude-code
+    reason: Automated bug fixing
+    estimated_duration: 10-20 min
+
+  # Test Generation
+  test-generation:
+    primary: codex
+    fallback: claude-code
+    reason: Automated test creation
+    estimated_duration: 5-10 min
+
+  # Session Recording
+  session-recording:
+    primary: nova
+    fallback: null
+    reason: Nova's specialized function
+    estimated_duration: 1-2 min
+
+  # Analytics
+  analytics:
+    primary: nova
+    fallback: null
+    reason: Performance tracking and insights
+    estimated_duration: 2-5 min
+
+# Conflict Resolution
+conflict_resolution:
+  enabled: true
+  method: autonomous-council
+  facilitator: sophia
+  trigger_conditions:
+    - multiple_ais_disagree
+    - user_requests_discussion
+    - high_priority_decision
+  max_rounds: 10
+  consensus_threshold: 0.75
+
+# Learning & Optimization
+learning:
+  enabled: true
+  method: nova-analytics
+  update_frequency: weekly
+  metrics_tracked:
+    - success_rate
+    - avg_duration
+    - quality_score
+    - cost_per_task
+  optimization_trigger:
+    min_samples: 10  # Need at least 10 tasks before optimizing
+    performance_delta: 0.20  # 20% better → switch primary AI
+
+# Monitoring & Observability
+monitoring:
+  enabled: true
+  log_level: info  # debug | info | warn | error
+  log_file: '{project_root}/logs/hive-mind.log'
+
+  # Metrics
+  track_metrics:
+    - task_completion_time
+    - ai_worker_utilization
+    - error_rate
+    - cost_per_day
+
+  # Alerts
+  alerts:
+    - condition: error_rate > 0.10
+      action: notify_user
+      message: "Hive Mind error rate above 10%"
+
+    - condition: cost_per_day > 50
+      action: notify_user
+      message: "Daily AI costs exceed $50"
+
+    - condition: task_queue_size > 20
+      action: notify_user
+      message: "Task queue backlog building up"
+
+# SLA (Service Level Agreement) Targets
+sla_targets:
+  critical:
+    target_completion_hours: 24
+    notify_if_exceeded: true
+
+  high:
+    target_completion_hours: 72
+
+  medium:
+    target_completion_hours: 168  # 1 week
+
+  low:
+    target_completion_hours: 720  # 1 month
+
+# Error Handling
+error_handling:
+  retry_attempts: 3
+  retry_delay_seconds: 60
+
+  # Fallback strategy
+  fallback_strategy:
+    - Try primary AI
+    - If fails, try fallback AI (if defined)
+    - If both fail, notify user + log error
+
+  # Circuit breaker (if AI consistently fails)
+  circuit_breaker:
+    enabled: true
+    failure_threshold: 5  # 5 consecutive failures
+    recovery_timeout_minutes: 30
+
+# Parallel Execution
+parallel_execution:
+  enabled: true
+  max_parallel_tasks: 10
+  task_dependencies: auto-detect  # Parse task dependencies
+
+# Session Recording
+session_recording:
+  enabled: true
+  record_to: nova
+  include:
+    - task_input
+    - task_output
+    - duration
+    - ai_worker_used
+    - success_status
+    - error_details (if any)
+
+# Archiving
+archiving:
+  enabled: true
+  archive_after_days: 30
+  archive_location: '{project_root}/docs/inbox/archive/'
+  archive_format: yaml  # yaml | json
+
+# Feature Flags
+features:
+  enable_gemini: false  # Not yet integrated
+  enable_codex: false   # Not yet integrated
+  enable_learned_routing: false  # Phase 2 feature
+  enable_parallel_execution: false  # Phase 2 feature
+
+# Development/Testing
+dev_mode:
+  enabled: true
+  mock_ais: true  # Use mock responses for testing
+  verbose_logging: true
+
+# Version Info
+version_info:
+  bmad_version: 6.0.0-alpha.2
+  hive_mind_version: 1.0.0
+  last_updated: 2025-11-02

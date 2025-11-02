@@ -1,0 +1,94 @@
+# BMAD-S Request Inbox
+# User requests are submitted here and automatically processed by AI Rada
+
+metadata:
+  version: 1.0
+  last_updated: 2025-11-02T14:00:00Z
+  total_requests: 3
+  pending: 2
+  processing: 0
+  completed: 1
+
+# Request Schema:
+# id: REQ-XXX (auto-increment)
+# title: Short summary
+# description: Detailed description
+# priority: critical | high | medium | low
+# submitted_by: User name
+# submitted_at: ISO 8601 datetime
+# status: pending | processing | specified | implementation | completed | rejected
+# tags: [array, of, tags]
+# council_session: Session ID (if processed)
+# specification: Path to spec file (if generated)
+# implemented_in: PR/commit link (if implemented)
+
+requests:
+  # Completed Example (MapTiler Maps - already done!)
+  - id: REQ-001
+    title: "Implementace interaktivních turistických map v HikeAI mobile aplikaci"
+    description: |
+      Implementovat interaktivní mapy v React Native mobile aplikaci pomocí MapTiler API.
+      Požadavky:
+      - Zobrazení mapy s turistickým stylem
+      - Vizualizace tras z backend API
+      - User location tracking
+      - Základní map gestures (zoom, pan)
+    priority: critical
+    submitted_by: david
+    submitted_at: 2025-11-02T10:00:00Z
+    status: completed
+    tags: [mobile, feature, maps, core-functionality]
+    council_session: AC-20251102-001
+    specification: docs/specs/spec-maptiler-maps-v1.md
+    notes: |
+      ✅ Council consensus: 95%
+      ✅ Specification complete
+      ✅ Timeline: 8-10 days
+      Ready for implementation phase
+
+  # Pending Request 1 (Test Case)
+  - id: REQ-002
+    title: "Add offline map caching for tourists without internet"
+    description: |
+      Many hikers go to remote areas without cell coverage.
+      Need to download map tiles for offline use.
+
+      Requirements:
+      - Download map tiles for selected region
+      - Store tiles locally (AsyncStorage or File System)
+      - Detect offline mode and use cached tiles
+      - Show "Downloaded regions" in settings
+      - Limit: Max 500MB cache size
+    priority: high
+    submitted_by: david
+    submitted_at: 2025-11-02T14:30:00Z
+    status: pending
+    tags: [mobile, feature, maps, offline, user-experience]
+    notes: |
+      Deferred from v1.0 (MapTiler maps MVP)
+      Target: v2.0
+
+  # Pending Request 2 (Test Case)
+  - id: REQ-003
+    title: "Chat asistent pro plánování tras"
+    description: |
+      Turista si povídá s AI o plánované túře, AI mu poradí:
+      - Kam jít (trasa podle obtížnosti, času, počasí)
+      - Co si vzít (vybavení podle trasy a počasí)
+      - Jaké počasí očekávat (integrace weather API)
+
+      Chatbot interface v mobile app, NLP backend.
+
+      Inspirace: ChatGPT-style interface ale specialized pro hiking.
+    priority: high
+    submitted_by: david
+    submitted_at: 2025-11-02T14:35:00Z
+    status: pending
+    tags: [mobile, backend, feature, ai, chat, user-experience]
+    notes: |
+      User's original idea from first discussion.
+      High business value - differentiator from competitors.
+      Requires: NLP model, weather API, route recommendation logic
+
+# Archive (completed or rejected requests older than 30 days)
+# Moved to: docs/inbox/archive/YYYY-MM.yaml

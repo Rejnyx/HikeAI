@@ -1,0 +1,23 @@
+{
+  "name": "bmad-ecosystem-tests",
+  "version": "1.0.0",
+  "description": "BMAD-S Ecosystem Testing Suite",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run --testPathPattern=tests/unit",
+    "test:integration": "vitest run --testPathPattern=tests/integration",
+    "test:e2e": "vitest run --testPathPattern=tests/e2e",
+    "test:hooks": "vitest run --testPathPattern=tests/unit/hooks"
+  },
+  "keywords": ["bmad", "testing", "ecosystem", "hooks"],
+  "author": "BMAD Core Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.6",
+    "vitest": "^4.0.6",
+    "js-yaml": "^4.1.0"
+  }
+}
