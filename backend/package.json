@@ -9,7 +9,8 @@
     "start": "node src/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:mass": "node tests/load/mass-route-generation.js"
   },
   "keywords": [
     "hiking",
@@ -31,7 +32,10 @@
     "express-rate-limit": "^8.2.1",
     "helmet": "^7.1.0",
     "morgan": "^1.10.0",
-    "openai": "^4.20.1"
+    "node-cron": "^4.2.1",
+    "openai": "^4.20.1",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.6",

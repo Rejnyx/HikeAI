@@ -3,6 +3,7 @@ import { geocode, findPOIsNearRoute } from './geocoding.js';
 import { generateGPX, calculateRouteStats } from '../utils/gpx.js';
 import { insertRoute, logGeneration } from './supabase.js';
 import { getHikingRoute } from './mapyczRouting.js';
+import { getSmartPOISuggestions } from './poiSearch.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -37,6 +38,88 @@ export async function generateRoute(prompt, constraints = {}) {
     console.log('✅ Entities:', JSON.stringify(entities, null, 2));
     console.log(`⏱️  Extraction: ${timings.extraction}ms`);
     tokensUsed += entities._tokensUsed || 0;
+
+    // STEP 1.2: Check for vague location specifiers
+    if (entities.startLocation && entities.startLocation.startsWith('vague:')) {
+      console.log(`⚠️  Vague start location detected: ${entities.startLocation}`);
+
+      // Determine destination for suggestions
+      let destinationName = entities.endLocation;
+      if (!destinationName && entities.mustVisit && entities.mustVisit.length > 0) {
+        destinationName = entities.mustVisit[0];
+      }
+
+      if (!destinationName) {
+        throw new Error('Could not determine destination for vague location suggestions');
+      }
+
+      // Geocode destination to get coordinates for smart parking search
+      console.log(`📍 Geocoding destination "${destinationName}" for smart suggestions...`);
+      let destinationCoords = null;
+      try {
+        const geocoded = await geocode(destinationName);
+        if (geocoded && geocoded.lat && geocoded.lng) {
+          destinationCoords = { lat: geocoded.lat, lng: geocoded.lng };
+          console.log(`✅ Destination coordinates: ${destinationCoords.lat}, ${destinationCoords.lng}`);
+        }
+      } catch (error) {
+        console.log(`⚠️  Could not geocode destination: ${error.message}`);
+        // Continue without coordinates - will use hardcoded fallback
+      }
+
+      // Get popular trailheads (now with coordinates for smart parking)
+      const suggestions = await getPopularTrailheads(
+        destinationName,
+        entities.startLocation,
+        null,
+        destinationCoords
+      );
+
+      // Throw custom error that will be caught by API endpoint
+      const error = new Error('Vague location specified');
+      error.code = 'VAGUE_LOCATION';
+      error.vagueType = entities.startLocation;
+      error.context = entities.additionalNotes || 'Start location not specific enough';
+      error.suggestions = suggestions;
+      error.message = `Upřesni prosím odkud chceš začít. ${entities.additionalNotes || ''}`;
+      throw error;
+    }
+
+    // STEP 1.3: Check for missing start location (null)
+    // Instead of creating 0km round trip, offer suggestions
+    if (!entities.startLocation && entities.endLocation) {
+      console.log(`⚠️  Start location not specified, but endLocation present: ${entities.endLocation}`);
+
+      const destinationName = entities.endLocation;
+      const suggestions = await getPopularTrailheads(destinationName, 'default', null);
+
+      // Throw error with suggestions
+      const error = new Error('Start location not specified');
+      error.code = 'START_LOCATION_MISSING';
+      error.context = 'User did not specify where to start the route';
+      error.suggestions = suggestions;
+      error.message = `Odkud chceš začít? Vyber výchozí bod pro trasu k ${destinationName}`;
+      throw error;
+    }
+
+    // STEP 1.4: Check for "pointless round trip" (start == end with no waypoints)
+    // This happens when user says "Na Praděd" (single location prompt)
+    if (entities.startLocation && entities.endLocation &&
+        entities.startLocation === entities.endLocation &&
+        (!entities.mustVisit || entities.mustVisit.length === 0)) {
+      console.log(`⚠️  Pointless round trip detected: ${entities.startLocation} → ${entities.startLocation} (no waypoints)`);
+
+      const destinationName = entities.startLocation;
+      const suggestions = await getPopularTrailheads(destinationName, 'default', null);
+
+      // Throw error with suggestions
+      const error = new Error('Pointless round trip');
+      error.code = 'START_LOCATION_MISSING';
+      error.context = `Round trip from ${destinationName} to itself with no waypoints would be 0km`;
+      error.suggestions = suggestions;
+      error.message = `Odkud chceš začít trasu na ${destinationName}? Upřesni výchozí bod:`;
+      throw error;
+    }
 
     // STEP 1.5: Sanity check - DISABLED for performance (saves 2-3s)
     // Validation is optional - we have other safety checks (distance validation, etc.)
@@ -170,6 +253,13 @@ export async function generateRoute(prompt, constraints = {}) {
     console.log(`✅ Route generated: ${routeData.waypoints.length} waypoints`);
     console.log(`⏱️  Routing + AI: ${timings.routing}ms`);
 
+    // VALIDATION: Check if route is valid (not 0km)
+    if (routeData.distance === 0 || routeData.waypoints.length < 3) {
+      throw new Error(
+        'Nepodařilo se vygenerovat platnou trasu. Zkus specifikovat konkrétní cíl nebo vrchol, např.: "Trasa na Hostýn z Bystřice" nebo "Okruh kolem Pradědu z Ovčárny".'
+      );
+    }
+
     // STEP 5: Calculate statistics
     console.log('\n5️⃣  Calculating route statistics...');
     // Use distance/duration from Mapy.cz API (correct values)
@@ -193,9 +283,17 @@ export async function generateRoute(prompt, constraints = {}) {
 
     // STEP 7: Save to database
     console.log('\n7️⃣  Saving to database...');
+
+    // Determine destination for analytics (for cache pre-warming)
+    let destination = entities.endLocation;
+    if (!destination && entities.mustVisit && entities.mustVisit.length > 0) {
+      destination = entities.mustVisit[0];
+    }
+
     const route = await insertRoute({
       name: routeData.name,
       description: routeData.description,
+      destination: destination || null, // For analytics & cache pre-warming
       start_point: `POINT(${startCoords.lng} ${startCoords.lat})`,
       end_point: `POINT(${endCoords.lng} ${endCoords.lat})`,
       waypoints: convertToPostGISLineString(routeData.waypoints),
@@ -255,7 +353,12 @@ export async function generateRoute(prompt, constraints = {}) {
   } catch (error) {
     console.error('\n❌ Route generation failed:', error.message);
 
-    // Log failed generation
+    // Re-throw vague location errors (these should be handled by API endpoint)
+    if (error.code === 'VAGUE_LOCATION' || error.code === 'START_LOCATION_MISSING') {
+      throw error; // Let the API endpoint handle these with proper suggestions
+    }
+
+    // Log failed generation (only for actual failures, not validation errors)
     await logGeneration({
       prompt: prompt,
       status: 'failed',
@@ -351,14 +454,78 @@ async function extractEntitiesWithAI(prompt) {
         role: 'system',
         content: `Extrahuj údaje z požadavku na turistickou trasu v České republice.
 
+⚠️ KRITICKÉ PRAVIDLO #0 - NEDĚLEJ DOPORUČENÍ!
+- POUZE EXTRAHUJ CO USER ŘEKL!
+- NIKDY nevymýšlej alternativy!
+- NIKDY nenahrazuj user input svými nápady!
+- Pokud user řekl "vrátit se do Karlovy Studánky" → startLocation MUSÍ být "Karlova Studánka"!
+- Pokud user řekl "z Bystřice" → startLocation MUSÍ být "Bystřice"!
+- DO NOT RECOMMEND ALTERNATIVES IN startLocation/endLocation - use EXACTLY what user said!
+
+⚠️ VÁGNÍ LOCATIONS - SPECIAL HANDLING:
+Pokud user specifikoval NEKONKRÉTNÍ místo, vrať speciální prefix POUZE pro startLocation:
+- "nejbližší nádraží" / "z nádraží" → startLocation: "vague:nearest-station"
+- "vlakové nádraží" / "z vlakového nádraží" / "z vlaku" → startLocation: "vague:train"
+- "autobusová zastávka" / "z autobusové zastávky" / "z autobusu" → startLocation: "vague:bus"
+- "nejbližší parkoviště" / "z parkoviště" → startLocation: "vague:parking"
+- "z hotelu" / "zpět na hotel" → startLocation: "vague:hotel"
+- "odtud" / "tam kde jsem" → startLocation: "vague:user-location"
+
+⚠️ SMART START INFERENCE - KDYŽ START NENÍ EXPLICITNĚ SPECIFIKOVÁN:
+Pokud user NEŘEKL odkud začít, ale specifikoval CÍL, použij inteligentní inference:
+
+**Roundtrip patterns (user chce se vrátit zpět, ale neřekl odkud):**
+- "Okružní trasa na [cíl]" → startLocation: "vague:parking"
+- "Na [cíl] a zpět" → startLocation: "vague:parking"
+- "Round trip na [cíl]" → startLocation: "vague:parking"
+- Poznámka: Pro roundtrips BEZ explicit startu je parkoviště nejlogičtější výchozí bod
+
+**Difficulty patterns (user specifikoval obtížnost, ale ne start):**
+- "Lehká trasa na [cíl]" → startLocation: "vague:parking", preferredDifficulty: "easy"
+- "Náročná túra na [cíl]" → startLocation: "vague:parking", preferredDifficulty: "hard"
+- "Středně těžká trasa na [cíl]" → startLocation: "vague:parking", preferredDifficulty: "moderate"
+
+**Simple goal patterns (user jen řekl kam chce, ale ne odkud):**
+- "Chci navštívit [cíl]" → startLocation: "vague:nearest-station"
+- "Túra na vrchol [cíl]" → startLocation: "vague:nearest-station"
+- "Na [cíl]" (jen cíl, nic víc) → startLocation: "vague:nearest-station"
+
+**Default fallback:**
+- Pokud ŽÁDNÝ z výše uvedených patterns neplatí a start není specifikován → startLocation: null
+- (To vyvolá START_LOCATION_MISSING error s custom suggestions)
+
+⚠️ DŮLEŽITÉ: "vague:" prefix se NIKDY NEPOUŽÍVÁ pro endLocation nebo mustVisit!
+- endLocation je VŽDY buď konkrétní místo ("Sněžka") nebo null!
+
+VŽDY přidej do additionalNotes co přesně user řekl!
+
+PŘÍKLADY VÁGNÍCH LOCATIONS:
+- "Na Sněžku z nejbližších nádraží" → startLocation: "vague:nearest-station", endLocation: null, mustVisit: ["Sněžka"], additionalNotes: "user řekl 'z nejbližších nádraží'"
+- "Z vlakového nádraží na Praděd" → startLocation: "vague:train", endLocation: null, mustVisit: ["Praděd"], additionalNotes: "user řekl 'z vlakového nádraží'"
+- "Z autobusové zastávky na Sněžku" → startLocation: "vague:bus", endLocation: null, mustVisit: ["Sněžka"], additionalNotes: "user řekl 'z autobusové zastávky'"
+- "Na Říp z autobusové zastávky" → startLocation: "vague:bus", endLocation: null, mustVisit: ["Říp"], additionalNotes: "user řekl 'z autobusové zastávky, cíl je Říp'"
+- "Z parkoviště na Hostýn" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Hostýn"], additionalNotes: "user řekl 'z parkoviště'"
+- "Na Šerák z autobusové zastávky" → startLocation: "vague:bus", endLocation: null, mustVisit: ["Šerák"], additionalNotes: "user řekl 'z autobusové zastávky, cíl je Šerák'"
+
+PŘÍKLADY SMART START INFERENCE:
+- "Okružní trasa na Praděd" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Praděd"], additionalNotes: "roundtrip pattern detected, user didn't specify start, using parking suggestions"
+- "Na Sněžka a zpět" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Sněžka"], additionalNotes: "roundtrip pattern 'a zpět' detected, using parking suggestions"
+- "Lehká trasa na Lysá hora" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Lysá hora"], preferredDifficulty: "easy", additionalNotes: "difficulty pattern detected, using parking suggestions"
+- "Náročná túra na Radhošť" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Radhošť"], preferredDifficulty: "hard", additionalNotes: "difficulty pattern detected, using parking suggestions"
+- "Chci navštívit Smrk" → startLocation: "vague:nearest-station", endLocation: null, mustVisit: ["Smrk"], additionalNotes: "simple goal pattern, using station/transport suggestions"
+- "Túra na vrchol Praděd" → startLocation: "vague:nearest-station", endLocation: null, mustVisit: ["Praděd"], additionalNotes: "simple goal pattern, using station/transport suggestions"
+- "Trasa na Praděd" (bez kontextu) → startLocation: null, endLocation: "Praděd", mustVisit: [], additionalNotes: "no pattern matched, start location not specified"
+
 PRAVIDLA - ČTĚTE POZORNĚ:
 
 1. ANALÝZA TYPU TRASY:
    - "Okružní trasa NA [cíl] Z [start]" → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
    - "Round trip Z [start] NA [cíl]" → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
-   - "Trasa NA [místo]" (bez explicitního startu) → startLocation: [místo], endLocation: [místo] (round trip)
-   - "[Místo]" (jedno slovo) → startLocation: [místo], endLocation: [místo] (round trip)
-   - "[start] → [cíl]" → startLocation: [start], endLocation: [cíl] (jednosměrná)
+   - "Trasa NA [cíl] Z [start]" (round trip) → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
+   - "NA [cíl]... zpět do [start]" → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
+   - "Trasa NA [místo]" (bez explicitního startu) → startLocation: [místo], endLocation: [místo], mustVisit: []
+   - "[Místo]" (jedno slovo) → startLocation: [místo], endLocation: [místo], mustVisit: []
+   - "[start] → [cíl]" → startLocation: [start], endLocation: [cíl], mustVisit: []
 
 2. PARSOVÁNÍ LOKACÍ:
    - Extrahuj POUZE čistý název místa (Pustevny, Radhošť, Ovčárna, Sněžka)
@@ -374,6 +541,13 @@ PRAVIDLA - ČTĚTE POZORNĚ:
 4. PŘÍKLADY (NÁSLEDUJ PŘESNĚ):
    Prompt: "Okružní trasa na Praděd z Ovčárny"
    → startLocation: "Ovčárna", endLocation: "Ovčárna", mustVisit: ["Praděd"]
+
+   Prompt: "Trasa na praděd, dolů se vrátit do Karlovy Studánky"
+   → startLocation: "Karlova Studánka", endLocation: "Karlova Studánka", mustVisit: ["Praděd"]
+   ⚠️ NE "Ovčárna"! User řekl "Karlova Studánka" - USE IT!
+
+   Prompt: "Trasa na Hostýn, dolů zpět do Bystřice"
+   → startLocation: "Bystřice pod Hostýnem", endLocation: "Bystřice pod Hostýnem", mustVisit: ["Hostýn"]
 
    Prompt: "Trasa na Sněžku"
    → startLocation: "Sněžka", endLocation: "Sněžka", mustVisit: []
@@ -692,8 +866,321 @@ function detectRegion(coords) {
   return null;
 }
 
+/**
+ * Get popular trailheads for a destination based on vague location type
+ * @param {string} destinationName - Name of the destination
+ * @param {string} vagueType - Type of vague location (e.g., "vague:nearest-station")
+ * @param {Object|null} region - Region context
+ * @returns {Promise<Array>} - Array of suggested starting locations
+ */
+async function getPopularTrailheads(destinationName, vagueType, region = null, coordinates = null) {
+  // Popular trailheads per destination - hardcoded for common Czech mountains
+  const trailheadDatabase = {
+    'Sněžka': {
+      'vague:train': [
+        'Pec pod Sněžkou (hl. nádraží)',
+        'Svoboda nad Úpou (nádraží)',
+        'Horní Maršov (nádraží)'
+      ],
+      'vague:bus': [
+        'Pec pod Sněžkou (autobusové nádraží)',
+        'Malá Úpa (autobusová zastávka)'
+      ],
+      'vague:nearest-station': [
+        'Pec pod Sněžkou (hl. nádraží)',
+        'Svoboda nad Úpou (nádraží)',
+        'Horní Maršov (nádraží)'
+      ],
+      'vague:parking': [
+        'Pec pod Sněžkou (parkoviště u lanovky)',
+        'Malá Úpa (parkoviště)',
+        'Růžová hora (parkoviště)'
+      ],
+      'default': [
+        'Pec pod Sněžkou',
+        'Obří důl',
+        'Luční bouda'
+      ]
+    },
+    'Praděd': {
+      'vague:train': [
+        'Vrbno pod Pradědem (nádraží)',
+        'Karlov (nádraží)'
+      ],
+      'vague:bus': [
+        'Karlova Studánka (autobusová zastávka)',
+        'Ovčárna (autobusová zastávka)'
+      ],
+      'vague:nearest-station': [
+        'Karlova Studánka (zastávka)',
+        'Vrbno pod Pradědem (nádraží)'
+      ],
+      'vague:parking': [
+        'Ovčárna (parkoviště)',
+        'Karlova Studánka (parkoviště)',
+        'Červenohorské sedlo (parkoviště)'
+      ],
+      'default': [
+        'Ovčárna',
+        'Karlova Studánka',
+        'Petrovy kameny'
+      ]
+    },
+    'Hostýn': {
+      'vague:train': [
+        'Bystřice pod Hostýnem (nádraží)'
+      ],
+      'vague:bus': [
+        'Bystřice pod Hostýnem (autobusové nádraží)',
+        'Chvalčov (autobusová zastávka)'
+      ],
+      'vague:nearest-station': [
+        'Bystřice pod Hostýnem (nádraží)'
+      ],
+      'vague:parking': [
+        'Bystřice pod Hostýnem (parkoviště)',
+        'Chvalčov (parkoviště)'
+      ],
+      'default': [
+        'Bystřice pod Hostýnem',
+        'Chvalčov'
+      ]
+    },
+    'Radhošť': {
+      'vague:train': [
+        'Frenštát pod Radhoštěm (nádraží)',
+        'Rožnov pod Radhoštěm (nádraží)'
+      ],
+      'vague:bus': [
+        'Pustevny (autobusová zastávka)',
+        'Frenštát pod Radhoštěm (autobusové nádraží)'
+      ],
+      'vague:nearest-station': [
+        'Frenštát pod Radhoštěm (nádraží)',
+        'Rožnov pod Radhoštěm (nádraží)'
+      ],
+      'vague:parking': [
+        'Pustevny (parkoviště)',
+        'Frenštát pod Radhoštěm (parkoviště)'
+      ],
+      'default': [
+        'Pustevny',
+        'Frenštát pod Radhoštěm',
+        'Rožnov pod Radhoštěm'
+      ]
+    },
+    'Lysá hora': {
+      'vague:train': [
+        'Frýdlant nad Ostravicí (nádraží)',
+        'Ostravice (nádraží)'
+      ],
+      'vague:bus': [
+        'Lysá hora - Ostravice (autobusová zastávka)',
+        'Frýdlant nad Ostravicí (autobusové nádraží)'
+      ],
+      'vague:nearest-station': [
+        'Frýdlant nad Ostravicí (nádraží)',
+        'Ostravice (nádraží)'
+      ],
+      'vague:parking': [
+        'Lysá hora - parkoviště u horní stanice lanovky',
+        'Ostravice - parkoviště'
+      ],
+      'default': [
+        'Ostravice',
+        'Frýdlant nad Ostravicí',
+        'Malenovice'
+      ]
+    },
+    'Smrk': {
+      'vague:train': [
+        'Tanvald (nádraží)',
+        'Kořenov (nádraží)'
+      ],
+      'vague:bus': [
+        'Jizerka (autobusová zastávka)',
+        'Bedřichov (autobusová zastávka)'
+      ],
+      'vague:nearest-station': [
+        'Tanvald (nádraží)',
+        'Kořenov (nádraží)'
+      ],
+      'vague:parking': [
+        'Jizerka (parkoviště)',
+        'Bedřichov (parkoviště)'
+      ],
+      'default': [
+        'Jizerka',
+        'Bedřichov',
+        'Smědava'
+      ]
+    },
+    'Velká Javořina': {
+      'vague:train': [
+        'Veselí nad Moravou (nádraží)',
+        'Strání (nádraží)'
+      ],
+      'vague:bus': [
+        'Strání (autobusová zastávka)',
+        'Lopeník (autobusová zastávka)'
+      ],
+      'vague:nearest-station': [
+        'Veselí nad Moravou (nádraží)',
+        'Strání (nádraží)'
+      ],
+      'vague:parking': [
+        'Lopeník (parkoviště)',
+        'Strání (parkoviště)'
+      ],
+      'default': [
+        'Lopeník',
+        'Strání',
+        'Velká nad Veličkou'
+      ]
+    },
+    'Říp': {
+      'vague:train': [
+        'Roudnice nad Labem (nádraží)',
+        'Litoměřice (nádraží)'
+      ],
+      'vague:bus': [
+        'Říp - parkoviště (autobusová zastávka)',
+        'Roudnice nad Labem (autobusové nádraží)'
+      ],
+      'vague:nearest-station': [
+        'Roudnice nad Labem (nádraží)',
+        'Litoměřice (nádraží)'
+      ],
+      'vague:parking': [
+        'Říp - parkoviště u úpatí',
+        'Roudnice nad Labem (parkoviště)'
+      ],
+      'default': [
+        'Říp - úpatí',
+        'Roudnice nad Labem',
+        'Litoměřice'
+      ]
+    },
+    'Ještěd': {
+      'vague:train': [
+        'Liberec (hlavní nádraží)',
+        'Liberec - Horní Hanychov (nádraží)'
+      ],
+      'vague:bus': [
+        'Liberec - Horní Hanychov (autobusová zastávka)',
+        'Liberec - centrum (autobusové nádraží)'
+      ],
+      'vague:nearest-station': [
+        'Liberec (hlavní nádraží)',
+        'Liberec - Horní Hanychov (nádraží)'
+      ],
+      'vague:parking': [
+        'Horní Hanychov (parkoviště u lanovky)',
+        'Liberec - Ještěd (parkoviště)'
+      ],
+      'default': [
+        'Horní Hanychov',
+        'Liberec',
+        'Ještěd - úpatí'
+      ]
+    },
+    'Šerák': {
+      'vague:train': [
+        'Rýmařov (nádraží)',
+        'Bruntál (nádraží)'
+      ],
+      'vague:bus': [
+        'Ramzová (autobusová zastávka)',
+        'Karlov pod Pradědem (autobusová zastávka)'
+      ],
+      'vague:nearest-station': [
+        'Rýmařov (nádraží)',
+        'Bruntál (nádraží)'
+      ],
+      'vague:parking': [
+        'Ramzová (parkoviště)',
+        'Šerák - sedlo (parkoviště)'
+      ],
+      'default': [
+        'Ramzová',
+        'Karlov pod Pradědem',
+        'Červenohorské sedlo'
+      ]
+    },
+    'Klínovec': {
+      'vague:train': [
+        'Chomutov (nádraží)',
+        'Jáchymov (nádraží)'
+      ],
+      'vague:bus': [
+        'Klínovec - lanovka (autobusová zastávka)',
+        'Jáchymov (autobusové nádraží)'
+      ],
+      'vague:nearest-station': [
+        'Chomutov (nádraží)',
+        'Jáchymov (nádraží)'
+      ],
+      'vague:parking': [
+        'Klínovec (parkoviště u lanovky)',
+        'Jáchymov (parkoviště)'
+      ],
+      'default': [
+        'Klínovec - lanovka',
+        'Jáchymov',
+        'Boží Dar'
+      ]
+    }
+  };
+
+  // For vague POI types with coordinates, try smart POI search first
+  const smartPOITypes = ['vague:parking', 'vague:train', 'vague:bus', 'vague:nearest-station'];
+  if (smartPOITypes.includes(vagueType) && coordinates) {
+    console.log(`🎯 Attempting smart POI search for ${vagueType} near ${destinationName}...`);
+
+    // Get hardcoded suggestions as fallback
+    const hardcodedSuggestions = trailheadDatabase[destinationName]?.[vagueType] || [];
+
+    try {
+      const smartSuggestions = await getSmartPOISuggestions(
+        destinationName,
+        vagueType,
+        coordinates,
+        hardcodedSuggestions
+      );
+
+      if (smartSuggestions.length > 0) {
+        console.log(`✅ Using smart POI suggestions: ${smartSuggestions.length} found`);
+        return smartSuggestions;
+      }
+    } catch (error) {
+      console.log(`⚠️  Smart POI search failed: ${error.message}, using hardcoded`);
+      // Fall through to use hardcoded database
+    }
+  }
+
+  // Try exact match first
+  if (trailheadDatabase[destinationName]) {
+    const suggestions = trailheadDatabase[destinationName][vagueType] ||
+                       trailheadDatabase[destinationName]['default'];
+    return suggestions;
+  }
+
+  // Fallback: generic suggestions based on region
+  if (region) {
+    const genericSuggestions = {
+      'vague:nearest-station': [`Nejbližší nádraží v oblasti ${region.name}`],
+      'vague:parking': [`Nejbližší parkoviště v oblasti ${region.name}`],
+      'default': [`Upřesni prosím odkud chceš začít trasu k ${destinationName}`]
+    };
+    return genericSuggestions[vagueType] || genericSuggestions['default'];
+  }
+
+  // Last resort
+  return [`Upřesni prosím odkud chceš začít trasu k ${destinationName}`];
+}
+
 // Export for testing
-export { detectRegion, geocodeWithRegionContext };
+export { detectRegion, geocodeWithRegionContext, getPopularTrailheads };
 
 export default {
   generateRoute,

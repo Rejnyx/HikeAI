@@ -66,6 +66,71 @@ export async function insertRoute(routeData) {
 }
 
 /**
+ * Update existing route in database
+ * @param {string} routeId - UUID of route to update
+ * @param {Object} routeData - Updated route data
+ * @returns {Promise<Object>}
+ */
+export async function updateRoute(routeId, routeData) {
+  try {
+    const { data, error } = await supabase
+      .from('routes')
+      .update(routeData)
+      .eq('id', routeId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    console.log('✅ Route updated:', data.id);
+    return { success: true, data };
+  } catch (error) {
+    console.error('❌ Route update failed:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Get top destinations from last N days for cache pre-warming
+ * @param {number} days - Number of days to look back (default 30)
+ * @param {number} limit - Max destinations to return (default 20)
+ * @returns {Promise<Array>} - Array of {destination, frequency}
+ */
+export async function getTopDestinations(days = 30, limit = 20) {
+  try {
+    const sinceDate = new Date();
+    sinceDate.setDate(sinceDate.getDate() - days);
+
+    const { data, error } = await supabase
+      .from('routes')
+      .select('destination')
+      .gte('created_at', sinceDate.toISOString())
+      .not('destination', 'is', null);
+
+    if (error) throw error;
+
+    // Count frequency of each destination
+    const frequencyMap = {};
+    data.forEach(route => {
+      const dest = route.destination;
+      frequencyMap[dest] = (frequencyMap[dest] || 0) + 1;
+    });
+
+    // Convert to array and sort by frequency
+    const topDestinations = Object.entries(frequencyMap)
+      .map(([destination, frequency]) => ({ destination, frequency }))
+      .sort((a, b) => b.frequency - a.frequency)
+      .slice(0, limit);
+
+    console.log(`📊 Analytics: Found ${topDestinations.length} top destinations from last ${days} days`);
+    return { success: true, data: topDestinations };
+  } catch (error) {
+    console.error('❌ Get top destinations failed:', error.message);
+    return { success: false, error: error.message, data: [] };
+  }
+}
+
+/**
  * Get route by ID
  * @param {string} routeId
  * @returns {Promise<Object>}
