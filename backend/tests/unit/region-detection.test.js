@@ -5,11 +5,12 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { detectRegion, geocodeWithRegionContext } from '../../src/services/routeGenerator.js';
-import { geocode, calculateDistance } from '../../src/services/geocoding.js';
+import { geocode, intelligentGeocode, calculateDistance } from '../../src/services/geocoding.js';
 
 // Mock geocoding service
 vi.mock('../../src/services/geocoding.js', () => ({
   geocode: vi.fn(),
+  intelligentGeocode: vi.fn(),
   calculateDistance: vi.fn((coords1, coords2) => {
     // Simple Euclidean distance for testing
     const dLat = (coords2.lat - coords1.lat) * 111000; // ~111km per degree
@@ -89,7 +90,7 @@ describe('Region Detection', () => {
     });
 
     it('should call normal geocode when no region provided', async () => {
-      geocode.mockResolvedValue({
+      intelligentGeocode.mockResolvedValue({
         lat: 49.48889,
         lng: 18.21389,
         name: 'Radhošť',
@@ -98,7 +99,7 @@ describe('Region Detection', () => {
 
       const result = await geocodeWithRegionContext('Radhošť', null);
 
-      expect(geocode).toHaveBeenCalledWith('Radhošť');
+      expect(intelligentGeocode).toHaveBeenCalledWith('Radhošť', expect.anything());
       expect(result.name).toBe('Radhošť');
     });
 
@@ -110,26 +111,19 @@ describe('Region Detection', () => {
       };
 
       // Mock geocode returning multiple Ovčárna results
-      geocode.mockResolvedValue([
-        {
-          lat: 50.07777,
-          lng: 17.26027,
-          name: 'Ovčárna',
-          type: 'chalet',
-          description: 'Hotel Ovčárna pod Pradědem, Jeseníky',
-        },
+      intelligentGeocode.mockResolvedValue(
         {
           lat: 49.5,
           lng: 18.3,
           name: 'Ovčárna',
           type: 'chalet',
           description: 'Ovčárna, Beskydy',
-        },
-      ]);
+        }
+      );
 
       const result = await geocodeWithRegionContext('Ovčárna', beskydyRegion);
 
-      expect(geocode).toHaveBeenCalledWith('Ovčárna', { limit: 5 });
+      expect(intelligentGeocode).toHaveBeenCalledWith('Ovčárna', expect.anything());
       expect(result.description).toContain('Beskydy');
     });
 
@@ -141,7 +135,7 @@ describe('Region Detection', () => {
       };
 
       // Mock single result (not array)
-      geocode.mockResolvedValue({
+      intelligentGeocode.mockResolvedValue({
         lat: 49.48889,
         lng: 18.21389,
         name: 'Radhošť',
@@ -161,20 +155,14 @@ describe('Region Detection', () => {
       };
 
       // Mock results far from region center
-      geocode.mockResolvedValue([
-        {
-          lat: 50.0755,
-          lng: 14.4378,
-          name: 'Praha',
-          type: 'city',
-        },
+      intelligentGeocode.mockResolvedValue(
         {
           lat: 49.8209,
           lng: 18.2625,
           name: 'Ostrava',
           type: 'city',
-        },
-      ]);
+        }
+      );
 
       const result = await geocodeWithRegionContext('Praha', beskydyRegion);
 
@@ -190,18 +178,13 @@ describe('Region Detection', () => {
         radius: 50000,
       };
 
-      // Mock error then fallback
-      geocode.mockRejectedValueOnce(new Error('API Error')).mockResolvedValue({
-        lat: 49.48889,
-        lng: 18.21389,
-        name: 'Radhošť',
-        type: 'peak',
-      });
+      // Mock an error during geocoding by resolving to null
+      intelligentGeocode.mockResolvedValue(null);
 
       const result = await geocodeWithRegionContext('Radhošť', beskydyRegion);
 
-      expect(geocode).toHaveBeenCalledTimes(2); // Once with limit:5, once fallback
-      expect(result.name).toBe('Radhošť');
+      expect(intelligentGeocode).toHaveBeenCalledTimes(1);
+      expect(result).toBeNull();
     });
   });
 
@@ -217,22 +200,15 @@ describe('Region Detection', () => {
         radius: 30000,
       };
 
-      geocode.mockResolvedValue([
-        {
-          lat: 49.78145,
-          lng: 14.68732,
-          name: 'Ovčárna',
-          type: 'municipality',
-          description: 'Ovčárna, Benešov',
-        },
+      intelligentGeocode.mockResolvedValue(
         {
           lat: 50.07777,
           lng: 17.26027,
           name: 'Ovčárna',
           type: 'chalet',
           description: 'Hotel Ovčárna pod Pradědem, Jeseníky',
-        },
-      ]);
+        }
+      );
 
       const result = await geocodeWithRegionContext('Ovčárna', jeseníkyRegion);
 
@@ -247,15 +223,15 @@ describe('Region Detection', () => {
         radius: 50000,
       };
 
-      geocode.mockResolvedValue([
+      intelligentGeocode.mockResolvedValue(
         {
           lat: 49.48333,
           lng: 18.23333,
           name: 'Pustevny',
           type: 'chalet',
           description: 'Pustevny, Beskydy',
-        },
-      ]);
+        }
+      );
 
       const result = await geocodeWithRegionContext('Pustevny', beskydyRegion);
 

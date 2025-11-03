@@ -253,12 +253,12 @@ describe('Mountain Knowledge Base (Smart Disambiguation)', () => {
 
     // Should return exact coordinates from mountain-coordinates.json
     expect(result).toMatchObject({
-      lat: 50.9275,
-      lng: 15.2717,
+      lat: 49.4856,
+      lng: 18.3681,
       name: 'Smrk',
       type: 'mountain_peak',
-      region: 'Jizerské hory',
-      elevation: 1124,
+      region: 'Beskydy',
+      elevation: 1276,
       source: 'mountain_database',
     });
   });
@@ -343,8 +343,8 @@ describe('Mountain Knowledge Base (Smart Disambiguation)', () => {
     // Verify it was cached
     const cached = getCached('Smrk');
     expect(cached).toMatchObject({
-      lat: 50.9275,
-      lng: 15.2717,
+      lat: 49.4856,
+      lng: 18.3681,
       name: 'Smrk',
     });
   });

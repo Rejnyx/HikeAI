@@ -257,10 +257,14 @@ export async function generateRoute(prompt, constraints = {}) {
     console.log(`⏱️  Routing + AI: ${timings.routing}ms`);
 
     // VALIDATION: Check if route is valid (not 0km)
-    if (routeData.distance === 0 || routeData.waypoints.length < 3) {
-      throw new Error(
-        'Nepodařilo se vygenerovat platnou trasu. Zkus specifikovat konkrétní cíl nebo vrchol, např.: "Trasa na Hostýn z Bystřice" nebo "Okruh kolem Pradědu z Ovčárny".'
-      );
+    if ((routeData.distance === 0 || routeData.waypoints.length < 2) && !routeData.fallback) {
+      // Allow 0km routes only if it's a valid "pointless" route where start and end are the same.
+      const isPointlessRoute = startCoords.lat === endCoords.lat && startCoords.lng === endCoords.lng && (!entities.mustVisit || entities.mustVisit.length === 0);
+      if (!isPointlessRoute) {
+        throw new Error(
+          'Nepodařilo se vygenerovat platnou trasu. Zkus specifikovat konkrétní cíl nebo vrchol, např.: "Trasa na Hostýn z Bystřice" nebo "Okruh kolem Pradědu z Ovčárny".'
+        );
+      }
     }
 
     // STEP 4.5: Validate route with comprehensive sanity checks

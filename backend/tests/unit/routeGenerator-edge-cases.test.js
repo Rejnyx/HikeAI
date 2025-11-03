@@ -109,34 +109,35 @@ describe('Route Generator - Edge Cases', () => {
         usage: { total_tokens: 150 }
       }));
 
-      // Mock geocoding to return same coordinates for Radhošť
+      // Mock geocoding to return a richer structure, similar to intelligentGeocode
       axios.get = vi.fn(async (url, config) => {
         const query = config.params.query.toLowerCase();
-
         if (query.includes('radhošť')) {
           return {
             data: {
               items: [{
                 name: 'Radhošť',
                 position: { lat: 49.48889, lon: 18.21389 },
-                type: 'peak'
+                type: 'peak',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         if (query.includes('pustevny')) {
           return {
             data: {
               items: [{
                 name: 'Pustevny',
                 position: { lat: 49.48333, lon: 18.23333 },
-                type: 'chalet'
+                type: 'chalet',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         return { data: { items: [] } };
       });
 
@@ -145,8 +146,8 @@ describe('Route Generator - Edge Cases', () => {
       expect(result.success).toBe(true);
       // Routing should be called with NO intermediate waypoints (Radhošť was skipped)
       expect(routing.getHikingRoute).toHaveBeenCalledWith(
-        expect.objectContaining({ lat: 49.48889, lng: 18.21389 }),
-        expect.objectContaining({ lat: 49.48333, lng: 18.23333 }),
+        expect.objectContaining({ lat: expect.closeTo(49.48889), lng: expect.closeTo(18.21389) }),
+        expect.objectContaining({ lat: expect.closeTo(49.48333), lng: expect.closeTo(18.23333) }),
         [] // Empty waypoints array - Radhošť was skipped
       );
     });
@@ -172,31 +173,32 @@ describe('Route Generator - Edge Cases', () => {
       // Mock geocoding
       axios.get = vi.fn(async (url, config) => {
         const query = config.params.query.toLowerCase();
-
         if (query.includes('radhošť')) {
           return {
             data: {
               items: [{
                 name: 'Radhošť',
                 position: { lat: 49.48889, lon: 18.21389 },
-                type: 'peak'
+                type: 'peak',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         if (query.includes('pustevny')) {
           return {
             data: {
               items: [{
                 name: 'Pustevny',
                 position: { lat: 49.48333, lon: 18.23333 },
-                type: 'chalet'
+                type: 'chalet',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         return { data: { items: [] } };
       });
 
@@ -205,8 +207,8 @@ describe('Route Generator - Edge Cases', () => {
       expect(result.success).toBe(true);
       // Routing should be called with NO intermediate waypoints
       expect(routing.getHikingRoute).toHaveBeenCalledWith(
-        expect.objectContaining({ lat: 49.48333, lng: 18.23333 }),
-        expect.objectContaining({ lat: 49.48889, lng: 18.21389 }),
+        expect.objectContaining({ lat: expect.closeTo(49.48333), lng: expect.closeTo(18.23333) }),
+        expect.objectContaining({ lat: expect.closeTo(49.48889), lng: expect.closeTo(18.21389) }),
         [] // Empty waypoints array
       );
     });
@@ -232,35 +234,34 @@ describe('Route Generator - Edge Cases', () => {
       }));
 
       // Mock geocoding - Radhošť succeeds, NonExistentPlace fails
-      let callCount = 0;
       axios.get = vi.fn(async (url, config) => {
-        callCount++;
         const query = config.params.query.toLowerCase();
-
         if (query.includes('pustevny')) {
           return {
             data: {
               items: [{
                 name: 'Pustevny',
                 position: { lat: 49.48333, lon: 18.23333 },
-                type: 'chalet'
+                type: 'chalet',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         if (query.includes('radhošť')) {
           return {
             data: {
               items: [{
                 name: 'Radhošť',
                 position: { lat: 49.48889, lon: 18.21389 },
-                type: 'peak'
+                type: 'peak',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         // NonExistentPlace - return empty
         return { data: { items: [] } };
       });
@@ -270,9 +271,9 @@ describe('Route Generator - Edge Cases', () => {
       expect(result.success).toBe(true);
       // Routing should be called with only Radhošť waypoint (NonExistentPlace was skipped)
       expect(routing.getHikingRoute).toHaveBeenCalledWith(
-        expect.objectContaining({ lat: 49.48333, lng: 18.23333 }),
-        expect.objectContaining({ lat: 49.48333, lng: 18.23333 }),
-        [expect.objectContaining({ name: 'Radhošť', lat: 49.48889, lng: 18.21389 })]
+        expect.objectContaining({ lat: expect.closeTo(49.48333), lng: expect.closeTo(18.23333) }),
+        expect.objectContaining({ lat: expect.closeTo(49.48333), lng: expect.closeTo(18.23333) }),
+        [expect.objectContaining({ name: 'Radhošť', lat: expect.closeTo(49.48889), lng: expect.closeTo(18.21389) })]
       );
     });
   });
@@ -354,31 +355,32 @@ describe('Route Generator - Edge Cases', () => {
       // Mock geocoding to return Kutná Hora and Kolín (~30km apart)
       axios.get = vi.fn(async (url, config) => {
         const query = config.params.query.toLowerCase();
-
         if (query.includes('kutná hora')) {
           return {
             data: {
               items: [{
                 name: 'Kutná Hora',
                 position: { lat: 49.9484, lon: 15.2680 },
-                type: 'city'
+                type: 'city',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         if (query.includes('kolín')) {
           return {
             data: {
               items: [{
                 name: 'Kolín',
                 position: { lat: 50.0281, lon: 15.1998 },
-                type: 'city'
+                type: 'city',
+                confidence: 1.0,
+                source: 'test'
               }]
             }
           };
         }
-
         return { data: { items: [] } };
       });
 

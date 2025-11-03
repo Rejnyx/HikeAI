@@ -19,6 +19,22 @@ export async function getHikingRoute(start, end, waypoints = []) {
     console.log(`   Start: ${start.name} (${start.lat}, ${start.lng})`);
     console.log(`   End: ${end.name} (${end.lat}, ${end.lng})`);
 
+    // Edge case: "Pointless" route where start and end are the same with no waypoints.
+    if (
+      start.lat === end.lat &&
+      start.lng === end.lng &&
+      waypoints.length === 0
+    ) {
+      console.log('   ⚠️  Pointless route detected. Returning 0km route.');
+      return {
+        success: true,
+        distance: 0,
+        duration: 0,
+        geometry: { type: 'LineString', coordinates: [[start.lng, start.lat]] },
+        waypoints: [{ lat: start.lat, lng: start.lng, elevation: 0 }],
+      };
+    }
+
     // SPECIÁLNÍ PŘÍPAD: Okružní cesta s waypointy
     // Pokud start == end a máme waypoints, vytvoříme 2 segmenty (tam a zpět)
     const isRoundTrip =
