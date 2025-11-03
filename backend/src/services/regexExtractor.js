@@ -193,7 +193,11 @@ export function getPatternStats() {
   return stats;
 }
 
+// Backward compatibility alias
+export const extractLocations = attemptExtraction;
+
 export default {
   attemptExtraction,
+  extractLocations,
   getPatternStats
 };
