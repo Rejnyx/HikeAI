@@ -37,6 +37,18 @@ const POI_TYPE_MAPPING = {
  */
 export async function findNearbyPOI(coordinates, destinationName, poiType, radiusKm = 10) {
   try {
+    // Validate coordinates before using them
+    if (!coordinates || typeof coordinates.lat !== 'number' || typeof coordinates.lng !== 'number') {
+      console.log(`⚠️  Invalid coordinates provided`);
+      return [];
+    }
+
+    // Validate coordinate ranges
+    if (coordinates.lat < -90 || coordinates.lat > 90 || coordinates.lng < -180 || coordinates.lng > 180) {
+      console.log(`⚠️  Coordinates out of valid range`);
+      return [];
+    }
+
     const { lat, lng } = coordinates;
     const radiusMeters = radiusKm * 1000;
 
