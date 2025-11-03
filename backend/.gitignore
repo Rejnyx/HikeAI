@@ -25,7 +25,14 @@ Thumbs.db
 
 # Testing
 coverage/
+test-results/
+*.xml
 
 # Build
 dist/
 build/
+
+# Runtime artifacts
+data/*.db
+*.db
+nul
