@@ -117,9 +117,8 @@ describe('POI Search Service (poiSearch.js)', () => {
       expect(axios.get).not.toHaveBeenCalled();
     });
 
-    // This test cannot be written yet, because the validation is missing in the source code.
-    // Once implemented, this test should pass.
-    it.fails('should return an empty array for out-of-range coordinates', async () => {
+    // Validation now implemented - test passes!
+    it('should return an empty array for out-of-range coordinates', async () => {
       const result = await findNearbyPOI({ lat: 91, lng: 181 }, 'Test', 'vague:parking');
       expect(result).toEqual([]);
       expect(axios.get).not.toHaveBeenCalled();

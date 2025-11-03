@@ -79,7 +79,9 @@ export async function findNearbyPOI(coordinates, destinationName, poiType, radiu
 
     if (response.data.status !== 'OK') {
       console.log(`⚠️  Google Places API returned status: ${response.data.status}`);
-      return []; // Return empty array, will fall back to hardcoded
+      // Try text search as fallback before giving up
+      console.log(`🔍 No results from nearby search, trying text search fallback...`);
+      return await findPOIByTextSearch(destinationName, coordinates, poiType, radiusKm);
     }
 
     const locations = response.data.results
