@@ -1,9 +1,12 @@
 import OpenAI from 'openai';
-import { geocode, findPOIsNearRoute } from './geocoding.js';
+import { geocode, intelligentGeocode, findPOIsNearRoute } from './geocoding.js';
 import { generateGPX, calculateRouteStats } from '../utils/gpx.js';
 import { insertRoute, logGeneration } from './supabase.js';
 import { getHikingRoute } from './mapyczRouting.js';
 import { getSmartPOISuggestions } from './poiSearch.js';
+import { validateRoute, getValidationSummary } from './routeValidator.js';
+import { attemptExtraction } from './regexExtractor.js';
+import { logFallback } from './llmFallbackLogger.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -57,7 +60,7 @@ export async function generateRoute(prompt, constraints = {}) {
       console.log(`📍 Geocoding destination "${destinationName}" for smart suggestions...`);
       let destinationCoords = null;
       try {
-        const geocoded = await geocode(destinationName);
+        const geocoded = await intelligentGeocode(destinationName, { promptContext: prompt });
         if (geocoded && geocoded.lat && geocoded.lng) {
           destinationCoords = { lat: geocoded.lat, lng: geocoded.lng };
           console.log(`✅ Destination coordinates: ${destinationCoords.lat}, ${destinationCoords.lng}`);
@@ -156,7 +159,7 @@ export async function generateRoute(prompt, constraints = {}) {
     const regionDetectionName = entities.mustVisit?.[0] || destinationName;
     console.log(`🗺️  Detecting region from: ${regionDetectionName}`);
 
-    const regionDetectionCoords = await geocode(regionDetectionName);
+    const regionDetectionCoords = await intelligentGeocode(regionDetectionName, { promptContext: prompt });
     if (regionDetectionCoords) {
       region = detectRegion(regionDetectionCoords);
       if (region) {
@@ -170,7 +173,7 @@ export async function generateRoute(prompt, constraints = {}) {
     // 2. Destination (if different from region detection) - use region context!
     if (destinationName !== regionDetectionName) {
       if (region) {
-        geocodePromises.push(geocodeWithRegionContext(destinationName, region));
+        geocodePromises.push(geocodeWithRegionContext(destinationName, region, prompt));
       } else {
         geocodePromises.push(geocode(destinationName));
       }
@@ -181,7 +184,7 @@ export async function generateRoute(prompt, constraints = {}) {
     // 3. Start location (if specified and different) - use region context!
     if (entities.startLocation && entities.startLocation !== destinationName) {
       if (region) {
-        geocodePromises.push(geocodeWithRegionContext(entities.startLocation, region));
+        geocodePromises.push(geocodeWithRegionContext(entities.startLocation, region, prompt));
       } else {
         geocodePromises.push(geocode(entities.startLocation));
       }
@@ -260,6 +263,39 @@ export async function generateRoute(prompt, constraints = {}) {
       );
     }
 
+    // STEP 4.5: Validate route with comprehensive sanity checks
+    console.log('\n4.5️⃣  Validating route sanity...');
+    const validation = validateRoute({
+      startPoint: startCoords,
+      endPoint: endCoords,
+      waypoints: routeData.waypoints,
+      mustVisit: entities.mustVisit || [],
+    }, {
+      originalPrompt: prompt,
+      expectedDifficulty: entities.preferredDifficulty,
+      maxDistance: entities.preferredDistance,
+    });
+
+    const validationSummary = getValidationSummary(validation);
+    console.log(`✅ Route sanity: ${validationSummary.sanityScore}% (${validationSummary.sanityLevel})`);
+    console.log(`   Issues: ${validationSummary.issueCount}, Warnings: ${validationSummary.warningCount}`);
+
+    // Log issues if any
+    if (validation.issues.length > 0) {
+      validation.issues.forEach(issue => {
+        console.warn(`   ⚠️  [${issue.severity}] ${issue.message}`);
+      });
+    }
+
+    // If route has critical issues (sanity score < 70%), warn but continue
+    if (!validation.isValid) {
+      console.warn(`⚠️  Route has sanity issues (${validationSummary.sanityScore}%), but proceeding with generation`);
+      if (validation.suggestions.length > 0) {
+        console.warn(`   Suggestions:`);
+        validation.suggestions.forEach(s => console.warn(`   - ${s.message}`));
+      }
+    }
+
     // STEP 5: Calculate statistics
     console.log('\n5️⃣  Calculating route statistics...');
     // Use distance/duration from Mapy.cz API (correct values)
@@ -284,16 +320,9 @@ export async function generateRoute(prompt, constraints = {}) {
     // STEP 7: Save to database
     console.log('\n7️⃣  Saving to database...');
 
-    // Determine destination for analytics (for cache pre-warming)
-    let destination = entities.endLocation;
-    if (!destination && entities.mustVisit && entities.mustVisit.length > 0) {
-      destination = entities.mustVisit[0];
-    }
-
     const route = await insertRoute({
       name: routeData.name,
       description: routeData.description,
-      destination: destination || null, // For analytics & cache pre-warming
       start_point: `POINT(${startCoords.lng} ${startCoords.lat})`,
       end_point: `POINT(${endCoords.lng} ${endCoords.lat})`,
       waypoints: convertToPostGISLineString(routeData.waypoints),
@@ -447,126 +476,59 @@ Je tato extrakce validní?`,
  * @returns {Promise<Object>}
  */
 async function extractEntitiesWithAI(prompt) {
+  const extractionStartTime = Date.now();
+
+  // STEP 1: Try Regex Extraction (instant, <5ms)
+  console.log(`\n🔍 [HYBRID EXTRACTION] Trying regex patterns first...`);
+  const regexResult = attemptExtraction(prompt, 'cs-CZ');
+
+  if (regexResult) {
+    const extractionTime = Date.now() - extractionStartTime;
+    console.log(`✅ [REGEX SUCCESS] Extraction completed in ${extractionTime}ms`);
+    console.log(`   Pattern used: ${regexResult.patternUsed}`);
+    console.log(`   📊 Telemetry: REGEX_HIT`);
+
+    return {
+      startLocation: regexResult.startLocation,
+      endLocation: regexResult.endLocation,
+      mustVisit: regexResult.mustVisit,
+      preferredDistance: regexResult.preferredDistance,
+      preferredDifficulty: regexResult.preferredDifficulty,
+      additionalNotes: regexResult.additionalNotes,
+      _extractionMethod: 'regex',
+      _patternUsed: regexResult.patternUsed,
+      _extractionTime: extractionTime,
+      _tokensUsed: 0 // No LLM tokens used
+    };
+  }
+
+  // STEP 2: Regex failed → Fall back to LLM (slow, 80+ seconds)
+  console.log(`⚠️  [REGEX FAILED] No pattern matched, falling back to LLM...`);
+  console.log(`   📊 Telemetry: LLM_FALLBACK`);
+
+  const llmStartTime = Date.now();
+
   const completion = await openai.chat.completions.create({
     model: 'gpt-5-nano', // Rychlý a levný model pro extraction
     messages: [
       {
         role: 'system',
-        content: `Extrahuj údaje z požadavku na turistickou trasu v České republice.
+        content: `Extrahuj údaje z požadavku na turistickou trasu v ČR. Vrať JSON.
 
-⚠️ KRITICKÉ PRAVIDLO #0 - NEDĚLEJ DOPORUČENÍ!
-- POUZE EXTRAHUJ CO USER ŘEKL!
-- NIKDY nevymýšlej alternativy!
-- NIKDY nenahrazuj user input svými nápady!
-- Pokud user řekl "vrátit se do Karlovy Studánky" → startLocation MUSÍ být "Karlova Studánka"!
-- Pokud user řekl "z Bystřice" → startLocation MUSÍ být "Bystřice"!
-- DO NOT RECOMMEND ALTERNATIVES IN startLocation/endLocation - use EXACTLY what user said!
+PRAVIDLA:
+1. PARSUJ PŘESNĚ CO USER ŘEKL - nedělej doporučení!
+2. VÁGNÍ MÍSTA: Pokud user řekl "z nádraží/z parkoviště/z autobusu" → použij prefix "vague:nearest-station"/"vague:parking"/"vague:bus"
+3. ROUNDTRIP: "Z [A] na [B]" → startLocation: A, endLocation: A, mustVisit: [B]
+4. ONE-WAY: "[A] → [B]" → startLocation: A, endLocation: B, mustVisit: []
+5. MUSTVISIT: Pouze vrcholy a horské chaty, NIKDY ne města/vesnice
 
-⚠️ VÁGNÍ LOCATIONS - SPECIAL HANDLING:
-Pokud user specifikoval NEKONKRÉTNÍ místo, vrať speciální prefix POUZE pro startLocation:
-- "nejbližší nádraží" / "z nádraží" → startLocation: "vague:nearest-station"
-- "vlakové nádraží" / "z vlakového nádraží" / "z vlaku" → startLocation: "vague:train"
-- "autobusová zastávka" / "z autobusové zastávky" / "z autobusu" → startLocation: "vague:bus"
-- "nejbližší parkoviště" / "z parkoviště" → startLocation: "vague:parking"
-- "z hotelu" / "zpět na hotel" → startLocation: "vague:hotel"
-- "odtud" / "tam kde jsem" → startLocation: "vague:user-location"
-
-⚠️ SMART START INFERENCE - KDYŽ START NENÍ EXPLICITNĚ SPECIFIKOVÁN:
-Pokud user NEŘEKL odkud začít, ale specifikoval CÍL, použij inteligentní inference:
-
-**Roundtrip patterns (user chce se vrátit zpět, ale neřekl odkud):**
-- "Okružní trasa na [cíl]" → startLocation: "vague:parking"
-- "Na [cíl] a zpět" → startLocation: "vague:parking"
-- "Round trip na [cíl]" → startLocation: "vague:parking"
-- Poznámka: Pro roundtrips BEZ explicit startu je parkoviště nejlogičtější výchozí bod
-
-**Difficulty patterns (user specifikoval obtížnost, ale ne start):**
-- "Lehká trasa na [cíl]" → startLocation: "vague:parking", preferredDifficulty: "easy"
-- "Náročná túra na [cíl]" → startLocation: "vague:parking", preferredDifficulty: "hard"
-- "Středně těžká trasa na [cíl]" → startLocation: "vague:parking", preferredDifficulty: "moderate"
-
-**Simple goal patterns (user jen řekl kam chce, ale ne odkud):**
-- "Chci navštívit [cíl]" → startLocation: "vague:nearest-station"
-- "Túra na vrchol [cíl]" → startLocation: "vague:nearest-station"
-- "Na [cíl]" (jen cíl, nic víc) → startLocation: "vague:nearest-station"
-
-**Default fallback:**
-- Pokud ŽÁDNÝ z výše uvedených patterns neplatí a start není specifikován → startLocation: null
-- (To vyvolá START_LOCATION_MISSING error s custom suggestions)
-
-⚠️ DŮLEŽITÉ: "vague:" prefix se NIKDY NEPOUŽÍVÁ pro endLocation nebo mustVisit!
-- endLocation je VŽDY buď konkrétní místo ("Sněžka") nebo null!
-
-VŽDY přidej do additionalNotes co přesně user řekl!
-
-PŘÍKLADY VÁGNÍCH LOCATIONS:
-- "Na Sněžku z nejbližších nádraží" → startLocation: "vague:nearest-station", endLocation: null, mustVisit: ["Sněžka"], additionalNotes: "user řekl 'z nejbližších nádraží'"
-- "Z vlakového nádraží na Praděd" → startLocation: "vague:train", endLocation: null, mustVisit: ["Praděd"], additionalNotes: "user řekl 'z vlakového nádraží'"
-- "Z autobusové zastávky na Sněžku" → startLocation: "vague:bus", endLocation: null, mustVisit: ["Sněžka"], additionalNotes: "user řekl 'z autobusové zastávky'"
-- "Na Říp z autobusové zastávky" → startLocation: "vague:bus", endLocation: null, mustVisit: ["Říp"], additionalNotes: "user řekl 'z autobusové zastávky, cíl je Říp'"
-- "Z parkoviště na Hostýn" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Hostýn"], additionalNotes: "user řekl 'z parkoviště'"
-- "Na Šerák z autobusové zastávky" → startLocation: "vague:bus", endLocation: null, mustVisit: ["Šerák"], additionalNotes: "user řekl 'z autobusové zastávky, cíl je Šerák'"
-
-PŘÍKLADY SMART START INFERENCE:
-- "Okružní trasa na Praděd" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Praděd"], additionalNotes: "roundtrip pattern detected, user didn't specify start, using parking suggestions"
-- "Na Sněžka a zpět" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Sněžka"], additionalNotes: "roundtrip pattern 'a zpět' detected, using parking suggestions"
-- "Lehká trasa na Lysá hora" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Lysá hora"], preferredDifficulty: "easy", additionalNotes: "difficulty pattern detected, using parking suggestions"
-- "Náročná túra na Radhošť" → startLocation: "vague:parking", endLocation: null, mustVisit: ["Radhošť"], preferredDifficulty: "hard", additionalNotes: "difficulty pattern detected, using parking suggestions"
-- "Chci navštívit Smrk" → startLocation: "vague:nearest-station", endLocation: null, mustVisit: ["Smrk"], additionalNotes: "simple goal pattern, using station/transport suggestions"
-- "Túra na vrchol Praděd" → startLocation: "vague:nearest-station", endLocation: null, mustVisit: ["Praděd"], additionalNotes: "simple goal pattern, using station/transport suggestions"
-- "Trasa na Praděd" (bez kontextu) → startLocation: null, endLocation: "Praděd", mustVisit: [], additionalNotes: "no pattern matched, start location not specified"
-
-PRAVIDLA - ČTĚTE POZORNĚ:
-
-1. ANALÝZA TYPU TRASY:
-   - "Okružní trasa NA [cíl] Z [start]" → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
-   - "Round trip Z [start] NA [cíl]" → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
-   - "Trasa NA [cíl] Z [start]" (round trip) → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
-   - "NA [cíl]... zpět do [start]" → startLocation: [start], endLocation: [start], mustVisit: [[cíl]]
-   - "Trasa NA [místo]" (bez explicitního startu) → startLocation: [místo], endLocation: [místo], mustVisit: []
-   - "[Místo]" (jedno slovo) → startLocation: [místo], endLocation: [místo], mustVisit: []
-   - "[start] → [cíl]" → startLocation: [start], endLocation: [cíl], mustVisit: []
-
-2. PARSOVÁNÍ LOKACÍ:
-   - Extrahuj POUZE čistý název místa (Pustevny, Radhošť, Ovčárna, Sněžka)
-   - BEZ závorek, popisů, nadmořské výšky: Špatně: "Libušín (dřevěný dům)", Dobře: "Radhošť"
-   - Když vidíš "Z [místo]" → toto je startLocation! NEZAMĚŇUJ to s jiným místem!
-   - Když vidíš "NA [místo]" → toto je cílová destinace (může být mustVisit nebo endLocation)
-
-3. MUSTVISIT PRAVIDLA:
-   - POUZE skutečné turistické cíle: vrcholy (Praděd, Sněžka, Radhošť), horské chaty (Ovčárna, Pustevny)
-   - NIKDY ne města, vesnice, parkoviště, silnice, obce
-   - Pokud nejsi 100% jistý že je to vrchol/horská chata, NEVKLÁDEJ to do mustVisit!
-
-4. PŘÍKLADY (NÁSLEDUJ PŘESNĚ):
-   Prompt: "Okružní trasa na Praděd z Ovčárny"
-   → startLocation: "Ovčárna", endLocation: "Ovčárna", mustVisit: ["Praděd"]
-
-   Prompt: "Trasa na praděd, dolů se vrátit do Karlovy Studánky"
-   → startLocation: "Karlova Studánka", endLocation: "Karlova Studánka", mustVisit: ["Praděd"]
-   ⚠️ NE "Ovčárna"! User řekl "Karlova Studánka" - USE IT!
-
-   Prompt: "Trasa na Hostýn, dolů zpět do Bystřice"
-   → startLocation: "Bystřice pod Hostýnem", endLocation: "Bystřice pod Hostýnem", mustVisit: ["Hostýn"]
-
-   Prompt: "Trasa na Sněžku"
-   → startLocation: "Sněžka", endLocation: "Sněžka", mustVisit: []
-
-   Prompt: "Round trip z Pusteven na Radhošť"
-   → startLocation: "Pustevny", endLocation: "Pustevny", mustVisit: ["Radhošť"]
-
-   Prompt: "Ostravice → Lysá hora"
-   → startLocation: "Ostravice", endLocation: "Lysá hora", mustVisit: []
+PŘÍKLADY:
+"Ostravice → Lysá hora" → {"startLocation":"Ostravice","endLocation":"Lysá hora","mustVisit":[]}
+"Z Ovčárny na Praděd" → {"startLocation":"Ovčárna","endLocation":"Ovčárna","mustVisit":["Praděd"]}
+"Z nádraží na Sněžku" → {"startLocation":"vague:nearest-station","endLocation":null,"mustVisit":["Sněžka"]}
 
 Vrať JSON:
-{
-  "startLocation": "název nebo null",
-  "endLocation": "název nebo null",
-  "mustVisit": ["pouze názvy vrcholů/horských chat"],
-  "preferredDistance": číslo v km nebo null,
-  "preferredDifficulty": "easy"|"moderate"|"hard"|null,
-  "additionalNotes": "poznámky"
-}`,
+{"startLocation":"název nebo null","endLocation":"název nebo null","mustVisit":[],"preferredDistance":null,"preferredDifficulty":null,"additionalNotes":"co user řekl"}`,
       },
       {
         role: 'user',
@@ -577,8 +539,20 @@ Vrať JSON:
     // temperature: 1 (default) - gpt-5-nano nepodporuje jiné hodnoty
   });
 
+  const llmTime = Date.now() - llmStartTime;
+  const totalTime = Date.now() - extractionStartTime;
+
   const result = JSON.parse(completion.choices[0].message.content);
   result._tokensUsed = completion.usage.total_tokens;
+  result._extractionMethod = 'llm';
+  result._extractionTime = totalTime;
+  result._llmTime = llmTime;
+
+  console.log(`✅ [LLM SUCCESS] Extraction completed in ${llmTime}ms (total: ${totalTime}ms)`);
+  console.log(`   Tokens used: ${result._tokensUsed}`);
+
+  // Log LLM fallback for self-improving pattern mining
+  logFallback(prompt, result, llmTime, result._tokensUsed);
 
   return result;
 }
@@ -604,7 +578,7 @@ async function generateRouteWithAI(prompt, startCoords, endCoords, pois, constra
     for (const placeName of entities.mustVisit) {
       try {
         // CRITICAL: Use region-aware geocoding to avoid finding wrong places with same name
-        const coords = await geocodeWithRegionContext(placeName, region);
+        const coords = await geocodeWithRegionContext(placeName, region, prompt);
         if (coords) {
           // Skip if waypoint is same as start or end (prevents 0km round trips)
           const isSameAsStart = coords.lat === startCoords.lat && coords.lng === startCoords.lng;
@@ -756,48 +730,22 @@ function calculateDistance(point1, point2) {
  * Geocoding s region kontextem - prioritizuje výsledky v daném regionu
  * @param {string} locationName - Název místa (např. "Frýdlant")
  * @param {Object|null} region - Region kontext z detectRegion()
+ * @param {string} promptContext - Original prompt for context (e.g., detecting "nádraží")
  * @returns {Promise<Object|null>}
  */
-async function geocodeWithRegionContext(locationName, region = null) {
-  // Pokud nemáme region, použít normální geocoding
-  if (!region) {
-    return await geocode(locationName);
-  }
-
-  try {
-    // Získat více výsledků z geocodingu
-    const response = await geocode(locationName, { limit: 5 });
-
-    // Pokud máme jen 1 výsledek, vrátit ho
-    if (!Array.isArray(response)) {
-      return response;
-    }
-
-    console.log(`   🔍 Found ${response.length} results for "${locationName}", filtering by region ${region.name}`);
-
-    // Seřadit podle vzdálenosti od region centru
-    const sortedResults = response
-      .map(result => ({
-        ...result,
-        distanceFromRegion: calculateDistance(result, region.center),
-      }))
-      .sort((a, b) => a.distanceFromRegion - b.distanceFromRegion);
-
-    // Vybrat nejbližší výsledek v rámci radiusu
-    const bestResult = sortedResults.find(r => r.distanceFromRegion <= region.radius);
-
-    if (bestResult) {
-      console.log(`   ✓ Selected: ${bestResult.name} (${(bestResult.distanceFromRegion / 1000).toFixed(1)}km from region center)`);
-      return bestResult;
-    }
-
-    // Pokud žádný výsledek není v radiusu, vrátit nejbližší
-    console.log(`   ⚠️  No results within ${region.name} region, using closest match`);
-    return sortedResults[0];
-  } catch (error) {
-    console.error(`❌ Region-aware geocoding failed:`, error.message);
-    return await geocode(locationName);
-  }
+async function geocodeWithRegionContext(locationName, region = null, promptContext = '') {
+  // UPGRADED: Use the new intelligent geocoding system with confidence scoring
+  // This replaces the old manual filtering logic with a comprehensive AI-powered system
+  return await intelligentGeocode(locationName, {
+    region: region ? {
+      lat: region.center.lat,
+      lng: region.center.lng,
+      name: region.name,
+      radius: region.radius
+    } : null,
+    promptContext: promptContext,
+    otherWaypoints: null  // Can be passed from caller if needed for proximity checking
+  });
 }
 
 /**

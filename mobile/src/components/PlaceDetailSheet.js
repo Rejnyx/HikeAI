@@ -71,7 +71,7 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
       setIsLoadingPhoto(true);
 
       try {
-        // Try Wikimedia Commons first
+        // Backend tries: Wikipedia CZ → Wikimedia Commons → Unsplash API → Google Places Photos
         const response = await axios.get(API_ENDPOINTS.PLACES_PHOTO, {
           params: { name: place.name },
           timeout: API_TIMEOUTS.DEFAULT,
@@ -79,18 +79,16 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
 
         if (response.data.success && response.data.photoUrl) {
           setPhotoUrl(response.data.photoUrl);
-          console.log('📷 Loaded photo from Wikimedia:', place.name);
+          console.log(`📷 Loaded photo from ${response.data.source}:`, place.name);
         } else {
-          // Fallback to Unsplash
-          const fallbackUrl = `https://source.unsplash.com/800x400/?mountain,hiking,${encodeURIComponent(place.name)}`;
-          setPhotoUrl(fallbackUrl);
-          console.log('📷 Using Unsplash fallback for:', place.name);
+          // No photo found - will show placeholder
+          setPhotoUrl(null);
+          console.log('📷 No photo available for:', place.name);
         }
       } catch (error) {
-        // Fallback to Unsplash on error
-        const fallbackUrl = `https://source.unsplash.com/800x400/?mountain,hiking,${encodeURIComponent(place.name)}`;
-        setPhotoUrl(fallbackUrl);
-        console.log('📷 Photo fetch failed, using Unsplash:', error.message);
+        // Backend failed - show placeholder
+        setPhotoUrl(null);
+        console.log('📷 Photo fetch error:', error.message);
       } finally {
         setIsLoadingPhoto(false);
       }
@@ -203,8 +201,7 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
             />
           ) : !isLoadingPhoto ? (
             <View style={styles.photoPlaceholderFinal}>
-              <Mountain size={48} color={colors.gray[400]} />
-              <Text style={styles.photoPlaceholderText}>Fotka není dostupná</Text>
+              <Mountain size={64} color={colors.primary[300]} strokeWidth={1.5} />
             </View>
           ) : null}
           {isLoadingPhoto && (
@@ -233,14 +230,18 @@ export default function PlaceDetailSheet({ place, visible, onClose, onPlanRoute,
               </View>
             </View>
             <TouchableOpacity
-              style={styles.saveButton}
+              style={[
+                styles.saveButton,
+                isSaved && styles.saveButtonActive
+              ]}
               onPress={handleToggleSave}
               activeOpacity={0.7}
             >
               <Heart
-                size={22}
-                color={isSaved ? colors.error : colors.text.secondary}
-                fill={isSaved ? colors.error : 'transparent'}
+                size={20}
+                color={isSaved ? colors.text.inverse : colors.text.secondary}
+                fill={isSaved ? colors.text.inverse : 'transparent'}
+                strokeWidth={isSaved ? 2.5 : 2}
               />
             </TouchableOpacity>
           </View>
@@ -403,12 +404,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.gray[100],
-    gap: spacing[2],
-  },
-  photoPlaceholderText: {
-    ...textStyles.small,
-    color: colors.gray[500],
+    backgroundColor: colors.primary[50],
   },
 
   // Info container - KOMPAKTNĚJŠÍ PADDING
@@ -457,7 +453,16 @@ const styles = StyleSheet.create({
     color: colors.primary[600],
   },
   saveButton: {
-    padding: spacing[1],
+    padding: spacing[2],
+    borderRadius: borderRadius.full,
+    backgroundColor: colors.background.primary,
+    borderWidth: 1,
+    borderColor: colors.gray[300],
+  },
+  saveButtonActive: {
+    backgroundColor: colors.error,
+    borderColor: colors.error,
+    ...shadow.sm,
   },
 
   // Stats - HORIZONTÁLNÍ, VÝRAZNĚJŠÍ PRO LEPŠÍ HIERARCHII

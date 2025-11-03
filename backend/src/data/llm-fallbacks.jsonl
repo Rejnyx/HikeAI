@@ -4,3 +4,8 @@
 {"timestamp":"2025-11-03T14:02:43.168Z","prompt":"Pustevny","entities":{"startLocation":"Pustevny","endLocation":"Pustevny","mustVisit":[]},"extractionTime":0,"tokensUsed":150,"locale":"cs-CZ"}
 {"timestamp":"2025-11-03T14:02:43.173Z","prompt":"Radhošť","entities":{"startLocation":"Radhošť","endLocation":"Radhošť","mustVisit":[]},"extractionTime":0,"tokensUsed":150,"locale":"cs-CZ"}
 {"timestamp":"2025-11-03T14:02:43.177Z","prompt":"Okružní trasa z Pusteven na Radhošť přes NonExistentPlace123","entities":{"startLocation":"Pustevny","endLocation":"Pustevny","mustVisit":["Radhošť","NonExistentPlace123"]},"extractionTime":0,"tokensUsed":150,"locale":"cs-CZ"}
+{"timestamp":"2025-11-03T14:31:17.631Z","prompt":"Trasa na Sněžku","entities":{"startLocation":"Sněžka","endLocation":"Sněžka","mustVisit":[]},"extractionTime":1,"tokensUsed":150,"locale":"cs-CZ"}
+{"timestamp":"2025-11-03T14:31:17.641Z","prompt":"Round trip z Pusteven na Radhošť","entities":{"startLocation":"Pustevny","endLocation":"Pustevny","mustVisit":["Radhošť"]},"extractionTime":0,"tokensUsed":150,"locale":"cs-CZ"}
+{"timestamp":"2025-11-03T14:31:17.656Z","prompt":"Pustevny","entities":{"startLocation":"Pustevny","endLocation":"Pustevny","mustVisit":[]},"extractionTime":0,"tokensUsed":150,"locale":"cs-CZ"}
+{"timestamp":"2025-11-03T14:31:17.663Z","prompt":"Radhošť","entities":{"startLocation":"Radhošť","endLocation":"Radhošť","mustVisit":[]},"extractionTime":0,"tokensUsed":150,"locale":"cs-CZ"}
+{"timestamp":"2025-11-03T14:31:17.663Z","prompt":"Okružní trasa z Pusteven na Radhošť přes NonExistentPlace123","entities":{"startLocation":"Pustevny","endLocation":"Pustevny","mustVisit":["Radhošť","NonExistentPlace123"]},"extractionTime":1,"tokensUsed":150,"locale":"cs-CZ"}

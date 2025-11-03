@@ -22,4 +22,22 @@ export const strictLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  // Skip rate limiting for localhost (for development and mass testing)
+  skip: (req) => {
+    // Allow disabling rate limit completely for testing (env variable)
+    if (process.env.DISABLE_RATE_LIMIT === 'true') {
+      return true;
+    }
+
+    // Otherwise, skip for localhost IPs
+    const ip = req.ip || req.connection.remoteAddress;
+    const isLocalhost = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+
+    // Debug logging to diagnose why localhost skip wasn't working
+    if (isLocalhost) {
+      console.log(`[Rate Limiter] Skipping rate limit for localhost IP: ${ip}`);
+    }
+
+    return isLocalhost;
+  }
 });

@@ -47,7 +47,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow Hike AI to use your location for route planning and tracking."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

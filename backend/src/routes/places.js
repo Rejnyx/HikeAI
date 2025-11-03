@@ -6,6 +6,7 @@ dotenv.config();
 
 const router = express.Router();
 const MAPY_CZ_API_KEY = process.env.MAPY_CZ_API_KEY;
+const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 const MAPY_CZ_SUGGEST_URL = 'https://api.mapy.cz/v1/suggest';
 const MAPY_CZ_GEOCODE_URL = 'https://api.mapy.cz/v1/geocode';
 const MAPY_CZ_RGEOCODE_URL = 'https://api.mapy.cz/v1/rgeocode';
@@ -392,6 +393,44 @@ router.get('/photo', async (req, res) => {
       }
     } catch (unsplashError) {
       // Silent fail
+    }
+
+    // Try 4: Google Places Photos API
+    if (GOOGLE_PLACES_API_KEY) {
+      try {
+        console.log(`📷 Trying Google Places Photos for: ${cleanName}`);
+
+        // Step 1: Text Search to find place_id
+        const textSearchUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
+        const textSearchResponse = await axiosGetWithTimeout(textSearchUrl, {
+          params: {
+            query: cleanName,
+            key: GOOGLE_PLACES_API_KEY,
+            language: 'cs',
+          },
+        });
+
+        if (textSearchResponse.data?.results?.[0]) {
+          const place = textSearchResponse.data.results[0];
+
+          // Step 2: Get photo reference
+          if (place.photos && place.photos.length > 0) {
+            const photoReference = place.photos[0].photo_reference;
+
+            // Step 3: Build photo URL
+            const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoReference}&key=${GOOGLE_PLACES_API_KEY}`;
+
+            return res.status(200).json({
+              success: true,
+              photoUrl,
+              source: 'google_places',
+            });
+          }
+        }
+      } catch (googleError) {
+        console.log(`⚠️  Google Places Photos failed: ${googleError.message}`);
+        // Silent fail - continue to 404
+      }
     }
 
     // No photo found after trying all sources

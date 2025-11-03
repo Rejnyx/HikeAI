@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   Animated,
+  Keyboard,
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -44,6 +45,7 @@ import { textStyles, fontSize, fontWeight } from '../theme/typography';
 import { spacing, borderRadius } from '../theme/spacing';
 import PlaceDetailSheet from '../components/PlaceDetailSheet';
 import RouteInputModal from '../components/RouteInputModal';
+import RouteDetailModal from '../components/RouteDetailModal';
 import { API_ENDPOINTS, API_TIMEOUTS } from '../config/api';
 import { calculateDistance, calculateEstimatedTime } from '../utils/distance';
 
@@ -192,14 +194,19 @@ export default function RoutesScreen() {
   const [showDistancePicker, setShowDistancePicker] = useState(false);
   const [poiMarkers, setPoiMarkers] = useState([]);
   const [showRouteInputModal, setShowRouteInputModal] = useState(false);
+  const [showRouteDetail, setShowRouteDetail] = useState(false);
   const [isGeneratingRoute, setIsGeneratingRoute] = useState(false);
   const [generatedRoute, setGeneratedRoute] = useState(null);
   const [placeForRouting, setPlaceForRouting] = useState(null);
+  const [vagueError, setVagueError] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
 
   // Routes from database
   const [routes, setRoutes] = useState([]);
   const [isLoadingRoutes, setIsLoadingRoutes] = useState(false);
+  const [nearbyRoutes, setNearbyRoutes] = useState([]);
+  const [isLoadingNearbyRoutes, setIsLoadingNearbyRoutes] = useState(false);
+  const [selectedPlaceForRoutes, setSelectedPlaceForRoutes] = useState(null);
 
   const bottomSheetRef = useRef(null);
   const mapRef = useRef(null);
@@ -222,7 +229,9 @@ export default function RoutesScreen() {
 
   const handleRoutePress = (route) => {
     setSelectedRoute(route);
-    // Center map on route - convert waypoints to coordinates
+    setShowRouteDetail(true);
+
+    // Also center map on route - convert waypoints to coordinates
     if (mapRef.current && route.waypoints && Array.isArray(route.waypoints) && route.waypoints.length > 0) {
       const coordinates = route.waypoints.map(wp => ({
         latitude: wp.lat,
@@ -232,6 +241,22 @@ export default function RoutesScreen() {
         edgePadding: { top: 50, right: 50, bottom: 300, left: 50 },
         animated: true,
       });
+    }
+  };
+
+  // Handle route update from RouteDetailModal
+  const handleRouteUpdated = (updatedRoute) => {
+    // Update routes list
+    setRoutes(prevRoutes =>
+      prevRoutes.map(r => (r.id === updatedRoute.id ? { ...r, ...updatedRoute } : r))
+    );
+
+    // Update selected route
+    setSelectedRoute(updatedRoute);
+
+    // Update generated route if it matches
+    if (generatedRoute?.id === updatedRoute.id) {
+      setGeneratedRoute(updatedRoute);
     }
   };
 
@@ -291,6 +316,9 @@ export default function RoutesScreen() {
     setSearchQuery(suggestion.name);
     setShowSuggestions(false);
     // DON'T clear suggestions - keep them for re-open!
+
+    // Dismiss keyboard to avoid extra tap
+    Keyboard.dismiss();
 
     // Center map on selected location
     if (mapRef.current && suggestion.location) {
@@ -406,13 +434,27 @@ export default function RoutesScreen() {
       }
     } catch (error) {
       console.error('❌ Route generation failed:', error.message);
-      Toast.show({
-        type: 'error',
-        text1: 'Generation Failed',
-        text2: 'Please try again or adjust your route parameters.',
-        position: 'bottom',
-        visibilityTime: 4000,
-      });
+
+      // Check for vague location error (400 with suggestions)
+      if (error.response?.status === 400 && error.response?.data?.suggestions) {
+        console.log('⚠️ Vague location detected, showing suggestions:', error.response.data.suggestions);
+        // Keep modal open and show suggestions
+        setVagueError({
+          message: error.response.data.message,
+          suggestions: error.response.data.suggestions
+        });
+        // Don't close modal - user needs to select a suggestion
+      } else {
+        // Generic error - close modal and show toast
+        setShowRouteInputModal(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Chyba při generování',
+          text2: error.response?.data?.message || 'Zkus to prosím znovu.',
+          position: 'bottom',
+          visibilityTime: 4000,
+        });
+      }
     } finally {
       setIsGeneratingRoute(false);
     }
@@ -436,6 +478,40 @@ export default function RoutesScreen() {
       console.error('❌ Failed to load routes:', error.message);
     } finally {
       setIsLoadingRoutes(false);
+    }
+  };
+
+  // Fetch routes near a specific place
+  const fetchNearbyRoutes = async (place) => {
+    if (!place || !place.location) {
+      console.error('❌ Cannot fetch nearby routes: invalid place');
+      return;
+    }
+
+    setIsLoadingNearbyRoutes(true);
+    setSelectedPlaceForRoutes(place);
+
+    try {
+      console.log(`📋 Fetching routes near ${place.name}...`);
+      const response = await axios.get(API_ENDPOINTS.ROUTES_LIST, {
+        params: {
+          lat: place.location.lat,
+          lng: place.location.lng,
+          radius: 10, // 10km radius
+        },
+        timeout: API_TIMEOUTS.DEFAULT,
+      });
+
+      if (response.data.success) {
+        const count = response.data.routes.length;
+        console.log(`✅ Found ${count} routes near ${place.name}`);
+        setNearbyRoutes(response.data.routes);
+      }
+    } catch (error) {
+      console.error('❌ Failed to load nearby routes:', error.message);
+      setNearbyRoutes([]);
+    } finally {
+      setIsLoadingNearbyRoutes(false);
     }
   };
 
@@ -489,6 +565,16 @@ export default function RoutesScreen() {
       }
     };
   }, []);
+
+  // Determine which routes to display
+  const displayedRoutes = useMemo(() => {
+    // If viewing routes for a specific place, show nearbyRoutes
+    if (selectedPlaceForRoutes && nearbyRoutes.length > 0) {
+      return nearbyRoutes;
+    }
+    // Otherwise show all routes
+    return routes;
+  }, [selectedPlaceForRoutes, nearbyRoutes, routes]);
 
   const renderRouteCard = (route) => {
     // Convert API waypoints to coordinates for minimap
@@ -639,7 +725,7 @@ export default function RoutesScreen() {
           ))}
 
           {/* Route markers from database */}
-          {routes.map((route) => {
+          {displayedRoutes.map((route) => {
             // Get start coordinate from API data
             const startCoord = route.start_coords
               ? { latitude: route.start_coords.lat, longitude: route.start_coords.lng }
@@ -824,7 +910,7 @@ export default function RoutesScreen() {
             </Modal>
           )}
 
-          {/* Plan New button */}
+          {/* Plan New button - Square with Plus icon */}
           <TouchableOpacity
             style={styles.planButton}
             activeOpacity={0.8}
@@ -833,8 +919,7 @@ export default function RoutesScreen() {
               setShowRouteInputModal(true);
             }}
           >
-            <Plus size={20} color={colors.primary[600]} />
-            <Text style={styles.planButtonText}>Nová trasa</Text>
+            <Plus size={24} color={colors.text.inverse} strokeWidth={2.5} />
           </TouchableOpacity>
         </View>
 
@@ -892,11 +977,30 @@ export default function RoutesScreen() {
             </View>
 
             {/* Horizontal route cards */}
-            {isLoadingRoutes ? (
+            {/* Header - show place name when viewing nearby routes */}
+            {selectedPlaceForRoutes && (
+              <View style={styles.nearbyRoutesHeader}>
+                <Text style={styles.nearbyRoutesTitle}>
+                  Trasy v okolí: {selectedPlaceForRoutes.name}
+                </Text>
+                <TouchableOpacity
+                  style={styles.clearFilterButton}
+                  onPress={() => {
+                    setSelectedPlaceForRoutes(null);
+                    setNearbyRoutes([]);
+                  }}
+                >
+                  <X size={18} color={colors.text.secondary} />
+                  <Text style={styles.clearFilterText}>Zobrazit vše</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {isLoadingRoutes || isLoadingNearbyRoutes ? (
               <View style={{ padding: 20, alignItems: 'center' }}>
                 <ActivityIndicator size="large" color={colors.primary[600]} />
               </View>
-            ) : routes.length > 0 ? (
+            ) : displayedRoutes.length > 0 ? (
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -904,12 +1008,14 @@ export default function RoutesScreen() {
                 snapToInterval={width * 0.85 + 16}
                 decelerationRate="fast"
               >
-                {routes.map(renderRouteCard)}
+                {displayedRoutes.map(renderRouteCard)}
               </ScrollView>
             ) : (
               <View style={{ padding: 20, alignItems: 'center' }}>
                 <Text style={{ color: colors.text.secondary }}>
-                  Zatím žádné trasy. Vygeneruj svou první trasu!
+                  {selectedPlaceForRoutes
+                    ? `Žádné trasy v okolí ${selectedPlaceForRoutes.name}`
+                    : 'Zatím žádné trasy. Vygeneruj svou první trasu!'}
                 </Text>
               </View>
             )}
@@ -928,9 +1034,11 @@ export default function RoutesScreen() {
             setShowPlaceDetail(false);
             setShowRouteInputModal(true);
           }}
-          onViewRoutes={(place) => {
+          onViewRoutes={async (place) => {
             console.log('View routes near:', place.name);
             setShowPlaceDetail(false);
+            // Fetch routes near this place
+            await fetchNearbyRoutes(place);
             // Open routes bottom sheet to show nearby routes
             if (bottomSheetRef.current) {
               bottomSheetRef.current.snapToIndex(2); // Expand to full view
@@ -941,10 +1049,22 @@ export default function RoutesScreen() {
         {/* Route Input Modal */}
         <RouteInputModal
           visible={showRouteInputModal}
-          onClose={() => setShowRouteInputModal(false)}
+          onClose={() => {
+            setShowRouteInputModal(false);
+            setVagueError(null); // Clear error when closing
+          }}
           onGenerate={handleGenerateRoute}
           place={placeForRouting}
           isGenerating={isGeneratingRoute}
+          vagueError={vagueError}
+        />
+
+        {/* Route Detail Modal */}
+        <RouteDetailModal
+          visible={showRouteDetail}
+          route={selectedRoute}
+          onClose={() => setShowRouteDetail(false)}
+          onRouteUpdated={handleRouteUpdated}
         />
 
         {/* Activity Picker Modal */}
@@ -1084,7 +1204,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 110,
     left: 16,
-    right: 156,
+    right: 76, // 48px button + 12px gap + 16px padding
   },
   suggestionsContainer: {
     maxHeight: 400,
@@ -1136,22 +1256,17 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   planButton: {
-    flexDirection: 'row',
+    width: 48,
+    height: 48,
     alignItems: 'center',
-    backgroundColor: colors.background.primary,
+    justifyContent: 'center',
+    backgroundColor: colors.primary[600],
     borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 5,
-  },
-  planButtonText: {
-    ...textStyles.bodySemibold,
-    color: colors.primary[600],
   },
 
   // Filters bar
@@ -1159,8 +1274,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 120,
     left: 16,
+    right: 16,
     flexDirection: 'row',
     gap: 8,
+    flexWrap: 'wrap',
   },
   filterButton: {
     flexDirection: 'row',
@@ -1388,5 +1505,36 @@ const styles = StyleSheet.create({
   modalOptionTextSelected: {
     color: colors.primary[600],
     fontWeight: fontWeight.bold,
+  },
+
+  // Nearby routes header
+  nearbyRoutesHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
+    backgroundColor: colors.primary[50],
+    borderBottomWidth: 1,
+    borderBottomColor: colors.primary[200],
+  },
+  nearbyRoutesTitle: {
+    ...textStyles.bodySemibold,
+    color: colors.primary[700],
+    flex: 1,
+  },
+  clearFilterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[1],
+    paddingHorizontal: spacing[2],
+    paddingVertical: spacing[1],
+    borderRadius: borderRadius.sm,
+    backgroundColor: colors.background.primary,
+  },
+  clearFilterText: {
+    ...textStyles.caption,
+    color: colors.text.secondary,
+    fontWeight: fontWeight.medium,
   },
 });

@@ -1,0 +1,269 @@
+{
+  "locale": "cs-CZ",
+  "version": "2.0.0",
+  "patterns": [
+    {
+      "name": "oneWay_z_na",
+      "description": "Z [místo] na [místo]",
+      "regex": "^(?:Z|z)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "oneWay_arrow",
+      "description": "[místo] → [místo] (universal)",
+      "regex": "^(.+?)\\s*→\\s*(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "roundTrip_z_na_zpet",
+      "description": "Z [start] na [vrchol] a zpět",
+      "regex": "^(?:Z|z)\\s+(.+?)\\s+na\\s+(.+?)\\s+(?:a zpět|zpět|a zpátky)(?:\\s+(?:do|na)\\s+(.+?))?$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$3||$1",
+        "mustVisit": ["$2"]
+      }
+    },
+    {
+      "name": "cesta_z_na_pak",
+      "description": "Cesta z [A] na [B] a pak do [C]",
+      "regex": "^(?:Cesta|cesta)\\s+(?:z|Z)\\s+(.+?)\\s+na\\s+(.+?)\\s+(?:a pak|pak)\\s+(?:do|na)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$3",
+        "mustVisit": ["$2"]
+      }
+    },
+    {
+      "name": "roundTrip_okruzni",
+      "description": "Okružní trasa na [vrchol] z [start]",
+      "regex": "^(?:Okružní trasa|okružní trasa|round trip)\\s+(?:na|Na)\\s+(.+?)\\s+(?:z|Z)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$2",
+        "endLocation": "$2",
+        "mustVisit": ["$1"]
+      }
+    },
+    {
+      "name": "simple_na",
+      "description": "Na [místo] (roundtrip default)",
+      "regex": "^(?:Na|na)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$1",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "trasa_z_na",
+      "description": "Trasa z [A] na [B]",
+      "regex": "^(?:Trasa|trasa)\\s+(?:z|Z)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "complex_nadrazi_na_pak",
+      "description": "Cesta z nádraží [A] na [B] pak do [C]",
+      "regex": "^(?:Cesta|cesta)\\s+z\\s+(?:nádraží|nadrazi|vlakového nádraží)\\s+(.+?)\\s+na\\s+(.+?)\\s+(?:a pak|pak)\\s+(?:do|na)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$3",
+        "mustVisit": ["$2"]
+      }
+    },
+    {
+      "name": "pres_vrchol",
+      "description": "Přes [vrchol] nebo Přes [vrchol] na/do [cíl]",
+      "regex": "^(?:Přes|přes)\\s+(.+?)(?:\\s+(?:na|do)\\s+(.+?))?$",
+      "extract": {
+        "startLocation": null,
+        "endLocation": "$2",
+        "mustVisit": ["$1"]
+      }
+    },
+    {
+      "name": "kolem_jezera",
+      "description": "Kolem [jezero/přehrada]",
+      "regex": "^(?:Kolem|kolem)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$1",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "with_distance",
+      "description": "Trasa z [A] na [B] do [X]km",
+      "regex": "^(?:Trasa|trasa)\\s+(?:z|Z)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)\\s+(?:do|max|maximálně)\\s+(\\d+)\\s*km",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": [],
+        "preferredDistance": "$3 km"
+      }
+    },
+    {
+      "name": "with_difficulty",
+      "description": "(Lehká|Náročná) trasa na [místo]",
+      "regex": "^(Lehká|lehká|Náročná|náročná|Středně těžká|středně těžká)\\s+(?:trasa|túra)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$2",
+        "endLocation": "$2",
+        "mustVisit": [],
+        "preferredDifficulty": "$1"
+      }
+    },
+    {
+      "name": "chtel_bych_z_na",
+      "description": "Chtěl bych jít z [A] na [B]",
+      "regex": "^(?:Chtěl bych|chtěl bych|Chtěla bych|chtěla bych|Chci|chci)\\s+jít\\s+(?:z|Z)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "z_pres_na",
+      "description": "Z [A] přes [B] na [C]",
+      "regex": "^(?:Z|z)\\s+(.+?)\\s+(?:přes|Přes)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$3",
+        "mustVisit": ["$2"]
+      }
+    },
+    {
+      "name": "tura_z_na",
+      "description": "Túra z [A] na [B]",
+      "regex": "^(?:Túra|túra|Výlet|výlet)\\s+(?:z|Z)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "prochazka_z_na",
+      "description": "Procházka z [A] na [B]",
+      "regex": "^(?:Procházka|procházka)\\s+(?:z|Z)\\s+(.+?)\\s+(?:na|do|k)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "vyjit_z_na",
+      "description": "Vyjít z [A] na [B]",
+      "regex": "^(?:Vyjít|vyjít|Vyrazit|vyrazit)\\s+(?:z|Z)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "smer_arrow",
+      "description": "[místo] směr [místo]",
+      "regex": "^(.+?)\\s+(?:směr|směrem)\\s+(?:na|do)?\\s*(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$2",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "asi_km_z_na",
+      "description": "Asi [X]km z [A] na [B]",
+      "regex": "^(?:Asi|asi|Cca|cca|Přibližně|přibližně)\\s+(\\d+)\\s*km\\s+(?:z|Z)\\s+(.+?)\\s+(?:na|do)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$2",
+        "endLocation": "$3",
+        "mustVisit": [],
+        "preferredDistance": "$1 km"
+      }
+    },
+    {
+      "name": "z_na_dolu_do",
+      "description": "Z [A] na [B] a dolů do [C]",
+      "regex": "^(?:Z|z)\\s+(.+?)\\s+na\\s+(.+?)\\s+a\\s+(?:dolů|dolu|dolů zpátky|zpátky dolů)\\s+(?:do|na)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "$1",
+        "endLocation": "$3",
+        "mustVisit": ["$2"]
+      }
+    },
+    {
+      "name": "na_vrchol_z_parkoviste",
+      "description": "Na [vrchol] z parkoviště",
+      "regex": "^(?:Na|na)\\s+(.+?)\\s+(?:z|Z)\\s+(?:nejbližšího\\s+)?(?:parkoviště|parkingu|parkoviska)$",
+      "extract": {
+        "startLocation": "vague:parking",
+        "endLocation": "$1",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "na_vrchol_z_nadrazi",
+      "description": "Na [vrchol] z nádraží",
+      "regex": "^(?:Na|na)\\s+(.+?)\\s+(?:z|Z)\\s+(?:nejbližšího\\s+)?(?:nádraží|nadrazi|vlaku|vlakového nádraží)$",
+      "extract": {
+        "startLocation": "vague:train",
+        "endLocation": "$1",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "z_parkoviste_na_vrchol",
+      "description": "Z parkoviště na [vrchol]",
+      "regex": "^(?:Z|z)\\s+(?:nejbližšího\\s+)?(?:parkoviště|parkingu|parkoviska)\\s+(?:na|Na)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "vague:parking",
+        "endLocation": "$1",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "z_nadrazi_na_vrchol",
+      "description": "Z nádraží na [vrchol]",
+      "regex": "^(?:Z|z)\\s+(?:nejbližšího\\s+)?(?:nádraží|nadrazi|vlaku|vlakového nádraží)\\s+(?:na|Na)\\s+(.+?)$",
+      "extract": {
+        "startLocation": "vague:train",
+        "endLocation": "$1",
+        "mustVisit": []
+      }
+    },
+    {
+      "name": "z_parkoviste_pres_vrchol",
+      "description": "Z parkoviště přes [vrchol]",
+      "regex": "^(?:Z|z)\\s+(?:nejbližšího\\s+)?(?:parkoviště|parkingu)\\s+(?:přes|Přes)\\s+(.+?)(?:\\s+(?:na|do)\\s+(.+?))?$",
+      "extract": {
+        "startLocation": "vague:parking",
+        "endLocation": "$2",
+        "mustVisit": ["$1"]
+      }
+    },
+    {
+      "name": "pres_vrchol_z_parkoviste",
+      "description": "Přes [vrchol] z parkoviště",
+      "regex": "^(?:Přes|přes)\\s+(.+?)\\s+(?:z|Z)\\s+(?:nejbližšího\\s+)?(?:parkoviště|parkingu)$",
+      "extract": {
+        "startLocation": "vague:parking",
+        "endLocation": null,
+        "mustVisit": ["$1"]
+      }
+    }
+  ]
+}

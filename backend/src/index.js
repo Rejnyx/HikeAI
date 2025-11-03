@@ -28,6 +28,9 @@ async function startServer() {
       console.log(`   GET  /api/v1/routes       - List routes`);
       console.log(`   GET  /api/v1/routes/:id   - Get route details`);
       console.log(`   GET  /api/v1/routes/:id/gpx - Download GPX`);
+      console.log(`   GET  /api/v1/peaks        - List all peaks`);
+      console.log(`   GET  /api/v1/peaks/search?q= - Search peaks`);
+      console.log(`   GET  /api/v1/peaks/:id/pois - Get POIs for peak`);
       console.log(`   GET  /api/v1/analytics    - Analytics insights\n`);
     });
 

@@ -91,10 +91,10 @@ export async function updateRoute(routeId, routeData) {
 }
 
 /**
- * Get top destinations from last N days for cache pre-warming
+ * Get top regions from last N days for cache pre-warming
  * @param {number} days - Number of days to look back (default 30)
- * @param {number} limit - Max destinations to return (default 20)
- * @returns {Promise<Array>} - Array of {destination, frequency}
+ * @param {number} limit - Max regions to return (default 20)
+ * @returns {Promise<Array>} - Array of {region, frequency}
  */
 export async function getTopDestinations(days = 30, limit = 20) {
   try {
@@ -103,29 +103,29 @@ export async function getTopDestinations(days = 30, limit = 20) {
 
     const { data, error } = await supabase
       .from('routes')
-      .select('destination')
+      .select('region, name')
       .gte('created_at', sinceDate.toISOString())
-      .not('destination', 'is', null);
+      .not('region', 'is', null);
 
     if (error) throw error;
 
-    // Count frequency of each destination
+    // Count frequency of each region
     const frequencyMap = {};
     data.forEach(route => {
-      const dest = route.destination;
-      frequencyMap[dest] = (frequencyMap[dest] || 0) + 1;
+      const region = route.region || 'unknown';
+      frequencyMap[region] = (frequencyMap[region] || 0) + 1;
     });
 
     // Convert to array and sort by frequency
-    const topDestinations = Object.entries(frequencyMap)
-      .map(([destination, frequency]) => ({ destination, frequency }))
+    const topRegions = Object.entries(frequencyMap)
+      .map(([region, frequency]) => ({ region, frequency }))
       .sort((a, b) => b.frequency - a.frequency)
       .slice(0, limit);
 
-    console.log(`📊 Analytics: Found ${topDestinations.length} top destinations from last ${days} days`);
-    return { success: true, data: topDestinations };
+    console.log(`📊 Analytics: Found ${topRegions.length} top regions from last ${days} days`);
+    return { success: true, data: topRegions };
   } catch (error) {
-    console.error('❌ Get top destinations failed:', error.message);
+    console.error('❌ Get top regions failed:', error.message);
     return { success: false, error: error.message, data: [] };
   }
 }
