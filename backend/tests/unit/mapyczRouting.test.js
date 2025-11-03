@@ -272,6 +272,65 @@ describe('Mapy.cz Routing Service', () => {
     });
   });
 
+  describe('getRoundTripRoute (NEW TESTS)', () => {
+    it('should correctly combine waypoints from multiple segments', async () => {
+      axios.get = vi.fn()
+        .mockResolvedValueOnce({ // Segment 1: Base -> WP1
+          status: 200,
+          data: { length: 100, duration: 10, geometry: { type: 'LineString', coordinates: [[1, 1], [2, 2]] } }
+        })
+        .mockResolvedValueOnce({ // Segment 2: WP1 -> Base
+          status: 200,
+          data: { length: 100, duration: 10, geometry: { type: 'LineString', coordinates: [[2, 2], [3, 3], [1, 1]] } }
+        });
+
+      const base = { lat: 1, lng: 1, name: 'Base' };
+      const waypoint = { lat: 2, lng: 2, name: 'WP1' };
+      const result = await getHikingRoute(base, base, [waypoint]);
+
+      expect(result.waypoints.length).toBe(4); // [1,1], [2,2], [3,3], [1,1]
+      // Check that the duplicate start of the second segment is removed
+      expect(result.waypoints[1]).toEqual({ lat: 2, lng: 2, elevation: 0 });
+      expect(result.waypoints[2]).toEqual({ lat: 3, lng: 3, elevation: 0 });
+    });
+
+    it('should throw an error if any segment fails', async () => {
+      axios.get = vi.fn()
+        .mockResolvedValueOnce({ // Segment 1: OK
+          status: 200,
+          data: { length: 100, duration: 10, geometry: { type: 'LineString', coordinates: [[1, 1], [2, 2]] } }
+        })
+        .mockRejectedValueOnce(new Error('Segment 2 failed')); // Segment 2: Fails
+
+      const base = { lat: 1, lng: 1, name: 'Base' };
+      const waypoint = { lat: 2, lng: 2, name: 'WP1' };
+
+      // We expect the main function to catch the error and return a fallback
+      const result = await getHikingRoute(base, base, [waypoint]);
+      expect(result.success).toBe(true);
+      expect(result.fallback).toBe(true);
+    });
+
+    it('should handle API response with missing geometry in a segment', async () => {
+       axios.get = vi.fn()
+        .mockResolvedValueOnce({ // Segment 1: OK
+          status: 200,
+          data: { length: 100, duration: 10, geometry: { type: 'LineString', coordinates: [[1, 1], [2, 2]] } }
+        })
+        .mockResolvedValueOnce({ // Segment 2: Missing geometry
+          status: 200,
+          data: { length: 100, duration: 10 }
+        });
+
+      const base = { lat: 1, lng: 1, name: 'Base' };
+      const waypoint = { lat: 2, lng: 2, name: 'WP1' };
+
+      const result = await getHikingRoute(base, base, [waypoint]);
+      expect(result.success).toBe(true);
+      expect(result.fallback).toBe(true);
+    });
+  });
+
   describe('getHikingRoute() - Error handling & fallback', () => {
     it('should fallback on API error', async () => {
       axios.get = vi.fn(async () => {
