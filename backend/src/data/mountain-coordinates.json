@@ -1,0 +1,93 @@
+{
+  "Praděd": {
+    "lat": 50.0833,
+    "lng": 17.2325,
+    "region": "Jeseníky",
+    "elevation": 1491,
+    "description": "Nejvyšší hora Jeseníků a Moravy"
+  },
+  "Sněžka": {
+    "lat": 50.7360,
+    "lng": 15.7397,
+    "region": "Krkonoše",
+    "elevation": 1603,
+    "description": "Nejvyšší hora České republiky"
+  },
+  "Lysá hora": {
+    "lat": 49.5483,
+    "lng": 18.4475,
+    "region": "Beskydy",
+    "elevation": 1323,
+    "description": "Nejvyšší hora Beskyd"
+  },
+  "Radhošť": {
+    "lat": 49.4950,
+    "lng": 18.2022,
+    "region": "Beskydy",
+    "elevation": 1129,
+    "description": "Legendární hora Radegasta v Beskydech"
+  },
+  "Smrk (Jizerské hory)": {
+    "lat": 50.9275,
+    "lng": 15.2717,
+    "region": "Jizerské hory",
+    "elevation": 1124,
+    "description": "Nejvyšší hora Jizerských hor"
+  },
+  "Smrk (Beskydy)": {
+    "lat": 49.4856,
+    "lng": 18.3681,
+    "region": "Beskydy",
+    "elevation": 1276,
+    "description": "Hora v Moravskoslezských Beskydech"
+  },
+  "Smrk": {
+    "lat": 49.4856,
+    "lng": 18.3681,
+    "region": "Beskydy",
+    "elevation": 1276,
+    "description": "Hora v Moravskoslezských Beskydech (default)"
+  },
+  "Velká Javořina": {
+    "lat": 48.8983,
+    "lng": 17.6772,
+    "region": "Bílé Karpaty",
+    "elevation": 970,
+    "description": "Nejvyšší hora Bílých Karpat"
+  },
+  "Říp": {
+    "lat": 50.4566,
+    "lng": 14.1044,
+    "region": "Středočeské středohoří",
+    "elevation": 456,
+    "description": "Symbolická hora přicházení praotce Čecha"
+  },
+  "Ještěd": {
+    "lat": 50.7317,
+    "lng": 15.0094,
+    "region": "Ještědský hřbet",
+    "elevation": 1012,
+    "description": "Dominanta Liberce s ikonickou televizní věží"
+  },
+  "Šerák": {
+    "lat": 50.2103,
+    "lng": 17.0992,
+    "region": "Jeseníky",
+    "elevation": 1351,
+    "description": "Druhá nejvyšší hora Jeseníků"
+  },
+  "Klínovec": {
+    "lat": 50.3956,
+    "lng": 12.9728,
+    "region": "Krušné hory",
+    "elevation": 1244,
+    "description": "Nejvyšší hora Krušných hor"
+  },
+  "Hostýn": {
+    "lat": 49.3667,
+    "lng": 17.9833,
+    "region": "Hostýnské vrchy",
+    "elevation": 735,
+    "description": "Poutní místo v Hostýnských vrších"
+  }
+}

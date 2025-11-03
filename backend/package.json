@@ -10,7 +10,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:mass": "node tests/load/mass-route-generation.js"
+    "test:mass": "node tests/load/mass-route-generation.js",
+    "seed:poi": "node src/scripts/seedPeaksAndPOIs.js",
+    "seed:poi:reset": "node src/scripts/seedPeaksAndPOIs.js --reset",
+    "seed:poi:clear": "node src/scripts/seedPeaksAndPOIs.js --clear"
   },
   "keywords": [
     "hiking",
